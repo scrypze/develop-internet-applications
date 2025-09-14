@@ -10,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var lines = []string{"first line", "second line", "third line", "fourth line"}
+// var lines = []string{"first line", "second line", "third line", "fourth line"}
 
 // func HelloHandler(ctx *gin.Context) {
 // 	ctx.HTML(http.StatusOK, "index.html", gin.H{
@@ -32,9 +32,11 @@ func StartServer() {
 	r := gin.Default()
 
 	r.LoadHTMLGlob("templates/*")
-
-	r.GET("/hello", handler.GetStars)
+	r.Static("/static", "./resources")
 	
+	r.GET("/hello", handler.GetStars)
+	r.GET("/star/:id", handler.GetStar)
+
 	r.Run()
 	log.Println("Server down")
 }

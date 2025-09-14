@@ -1,6 +1,10 @@
 package repository
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+
+)
 
 type Repository struct {
 
@@ -40,4 +44,36 @@ func (r *Repository) GetStars() ([]Star, error) {
 	}
 
 	return stars, nil
+}
+
+func (r *Repository) GetStar(id int) (Star, error) {
+	stars, err := r.GetStars()
+
+	if err != nil {
+		return Star{}, err
+	}
+
+	for _, star := range stars {
+		if star.ID == id {
+			return star, nil
+		}
+	}
+
+	return Star{}, fmt.Errorf("звезда не найдена")
+}
+
+func (r *Repository) GetStarsByTitle(title string) ([]Star, error) {
+	stars, err := r.GetStars()
+	if err != nil {
+		return []Star{}, err
+	}
+
+	var result []Star
+	for _, star := range stars {
+		if strings.Contains(strings.ToLower(star.Title), strings.ToLower(title)) {
+			result = append(result, star) 
+		}
+	}
+
+	return result, nil
 }
