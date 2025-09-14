@@ -1,25 +1,37 @@
 <html lang="en">
 <head>
-    <title>Metoda</title>
+    <title>Экзопланетный калькулятор</title>
     <link rel="stylesheet" href="/static/styles/index_style.css">
 </head>
-<header>
-    <h1>
-        <a href="/hello"><img src="/static/img/image.png" alt="home"></a>
-    </h1>
-</header>
-<form action="/hello" method="GET">
-    <input type="text" name="query" placeholder="Введите запрос" value="{{ .query }}">
-    <button type="submit">Найти</button>
-</form>
-<h2>
-    {{ .time }}
-</h2>
-<ul>
-    {{ range .stars }}
-    <li>
-        <a href="/star/{{ .ID }}"> {{ .Title }} </a>
-    </li>
-    {{ end }}
-</ul>
+<body>
+    <header>
+        <div class="main-header">
+            <div class="header-content">
+                <a href="/hello"><img src="/static/img/image.png" alt="home"></a>
+                <h1>Экзопланетный калькулятор</h1>
+            </div>
+        </div>
+    </header>
+    <div class="gray-space">
+        <div class="nav-buttons">
+            <button class="nav-btn active">Звёзды</button>
+            <button class="nav-btn">Заявки</button>
+        </div>
+    </div>
+    <form action="/hello" method="GET">
+        <input type="text" name="query" placeholder="Введите запрос" value="{{ .query }}">
+        <button type="submit">Найти</button>
+    </form>
+
+    <h2>
+        {{ .time }}
+    </h2>
+    <ul>
+        {{ range .stars }}
+        <li>
+            <a href="/star/{{ .ID }}"> {{ .Title }} </a>
+        </li>
+        {{ end }}
+    </ul>
+</body>
 </html>
