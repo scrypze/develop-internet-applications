@@ -62,13 +62,20 @@ header img {
     border: 3px solid #A9A9A9;
     border-radius: 30px;
     padding: 8px 16px;
-    font-size: 14px;
+    font-size: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.nav-btn:hover {
+.nav-btn.unactive:hover {
     background-color: #444444;
+    opacity: 100%;
+}
+
+.nav-btn.unactive {
+    background-color: #1B1B1B;
+    color: white;
+    opacity: 50%;
 }
 
 .nav-btn.active {
