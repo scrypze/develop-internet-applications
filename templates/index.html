@@ -18,20 +18,23 @@
             <button class="nav-btn unactive">Заявки</button>
         </div>
     </div>
-    <form action="/hello" method="GET">
-        <input type="text" name="query" placeholder="Введите запрос" value="{{ .query }}">
-        <button type="submit">Найти</button>
-    </form>
+    <div class="main-content">
+        <h1 class="page-title">Звёзды</h1>
+        <form class="search-form" action="/hello" method="GET">
+            <input class="search-input" type="text" name="query" placeholder="Поиск звёзд" value="{{ .query }}" aria-label="Поиск звёзд">
+            <button class="search-button" type="submit">Поиск</button>
+        </form>
 
-    <h2>
-        {{ .time }}
-    </h2>
-    <ul>
-        {{ range .stars }}
-        <li>
-            <a href="/star/{{ .ID }}"> {{ .Title }} </a>
-        </li>
-        {{ end }}
-    </ul>
+        <h2>
+            {{ .time }}
+        </h2>
+        <ul>
+            {{ range .stars }}
+            <li>
+                <a href="/star/{{ .ID }}"> {{ .Title }} </a>
+            </li>
+            {{ end }}
+        </ul>
+    </div>
 </body>
 </html>
