@@ -17,6 +17,8 @@ func NewRepository() (*Repository, error) {
 type Star struct {
 	ID int
 	Title string
+	Description string
+	ImagePath string
 }
 
 func (r *Repository) GetStars() ([]Star, error) {
@@ -24,18 +26,26 @@ func (r *Repository) GetStars() ([]Star, error) {
 		{
 			ID: 1,
 			Title: "Gliese 667",
+			Description: "Красный карлик спектрального класса M1.5V",
+			ImagePath: "http://localhost:9000/exocalc/gliese-667.png",
 		},
 		{
 			ID: 2,
 			Title: "TRAPPIST-1",
+			Description: "Ультрахолодный красный карлик спектрального класса M8V",
+			ImagePath: "http://localhost:9000/exocalc/trappist-1.png",
 		},
 		{
 			ID: 3,
 			Title: "Ross 128",
+			Description: "Красный карлик спектрального класса M4V",
+			ImagePath: "http://localhost:9000/exocalc/ross-128.png",
 		},
 		{
 			ID: 4,
 			Title: "Proxima Centauri",
+			Description: "Красный карлик спектрального класса M5.5V",
+			ImagePath: "http://localhost:9000/exocalc/proxima.png",
 		},
 	}
 

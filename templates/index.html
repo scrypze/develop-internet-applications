@@ -25,16 +25,20 @@
             <button class="search-button" type="submit">Поиск</button>
         </form>
 
-        <h2>
-            {{ .time }}
-        </h2>
-        <ul>
+        <div class="stars-grid">
             {{ range .stars }}
-            <li>
-                <a href="/star/{{ .ID }}"> {{ .Title }} </a>
-            </li>
+            <div class="star-card">
+                <div class="star-image">
+                    <img src="{{ .ImagePath }}" alt="{{ .Title }}">
+                </div>
+                <div class="star-info">
+                    <h3 class="star-title">{{ .Title }}</h3>
+                    <p class="star-description">{{ .Description }}</p>
+                    <a href="/star/{{ .ID }}" class="details-button">Подробнее</a>
+                </div>
+            </div>
             {{ end }}
-        </ul>
+        </div>
     </div>
 </body>
 </html>
