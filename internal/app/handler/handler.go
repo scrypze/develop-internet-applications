@@ -38,16 +38,16 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	}
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
-		"time":   time.Now().Format("15:04:05"),
+		"time":  time.Now().Format("15:04:05"),
 		"stars": stars,
-		"query":  searchQuery, // передаем введенный запрос обратно на страницу
+		"query": searchQuery, // передаем введенный запрос обратно на страницу
 		// в ином случае оно будет очищаться при нажатии на кнопку
 	})
-} 
+}
 
 func (h *Handler) GetStar(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-	
+
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		logrus.Error(err)

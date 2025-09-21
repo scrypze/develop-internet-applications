@@ -13,10 +13,10 @@ func NewRepository() (*Repository, error) {
 }
 
 type Star struct {
-	ID          int
-	Title       string
-	Description string
-	ImagePath   string
+	ID           int
+	Title        string
+	Description  string
+	ImagePath    string
 	SpectralType string
 	Temperature  string
 	Radius       string
