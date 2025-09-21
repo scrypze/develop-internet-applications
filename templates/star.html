@@ -1,14 +1,73 @@
 <html lang="en">
 <head>
-    <title>Metoda</title>
+    <title>Экзопланетный калькулятор - {{ .star.Title }}</title>
     <link rel="stylesheet" href="/static/styles/star_style.css">
 </head>
-<header>
-    <h1>
-        <a href="/hello"><img src="/static/img/image.png" alt="home" width="50px" height="50px"></a>
-    </h1>
-</header>
-    <h1>Информация о звезде №{{ .star.ID }}</h1>
-    <h2>Название: {{ .star.Title }}</h2>
-    <h2>Описание: {{ .star.Description }}</h2>
+<body>
+    <header>
+        <div class="main-header">
+            <div class="header-content">
+                <a href="/hello"><img src="/static/img/image.png" alt="home"></a>
+                <h1>Экзопланетный калькулятор</h1>
+            </div>
+        </div>
+    </header>
+    <div class="gray-space">
+        <div class="nav-buttons">
+            <button class="nav-btn active">Звёзды</button>
+            <button class="nav-btn unactive">Заявки</button>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="breadcrumb">
+            <span class="breadcrumb-text">Звёзды / {{ .star.Title }}</span>
+        </div>
+        <h1 class="star-title">{{ .star.Title }}</h1>
+        
+        <div class="info-panel">
+            <div class="star-image-container">
+                <img src="{{ .star.ImagePath }}" alt="{{ .star.Title }}" class="star-image">
+            </div>
+            <div class="star-properties">
+                <div class="property-row">
+                    <span class="property-name">Спектральный тип</span>
+                    <span class="property-value">{{ .star.SpectralType }}</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-name">Эффективная температура</span>
+                    <span class="property-value">{{ .star.Temperature }}</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-name">Радиус</span>
+                    <span class="property-value">{{ .star.Radius }}</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-name">Масса</span>
+                    <span class="property-value">{{ .star.Mass }}</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-name">Светимость</span>
+                    <span class="property-value">{{ .star.Luminosity }}</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-name">Металличность [Fe/H]</span>
+                    <span class="property-value">{{ .star.Metallicity }}</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-name">Возраст</span>
+                    <span class="property-value">{{ .star.Age }}</span>
+                </div>
+                <div class="property-row">
+                    <span class="property-name">Расстояние</span>
+                    <span class="property-value">{{ .star.Distance }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <a href="/hello" class="back-button">
+            <span class="back-arrow">‹‹</span>
+            Назад
+        </a>
+    </div>
+</body>
 </html>
