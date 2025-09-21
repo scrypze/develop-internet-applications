@@ -72,6 +72,15 @@ header img {
     font-size: 20px;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.nav-btn:link,
+.nav-btn:visited,
+.nav-btn:hover,
+.nav-btn:active {
+    text-decoration: none;
 }
 
 .nav-btn.unactive:hover {
