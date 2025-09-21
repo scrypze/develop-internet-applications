@@ -189,6 +189,8 @@ h2 {
     height: 350px;
     margin: 0 auto;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .star-card:hover {
@@ -216,6 +218,10 @@ h2 {
 .star-info {
     text-align: center;
     padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
 }
 
 .star-title {
@@ -230,8 +236,8 @@ h2 {
     color: #ffffff;
     font-size: 15px;
     line-height: 1.3;
-    margin-top: 20px;
-    margin-bottom: 80px;
+    margin-top: 10px;
+    margin-bottom: 0;
     font-family: "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
     opacity: 0.9;
 }
@@ -253,6 +259,9 @@ h2 {
     text-align: center;
     margin: 0 auto;
     line-height: 23px;
+}
+.star-info .details-button { 
+    margin-top: auto; 
 }
 
 .details-button:hover {
