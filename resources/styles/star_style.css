@@ -4,9 +4,16 @@
     box-sizing: border-box;
 }
 
+:root {
+    --header-height: 79.8px;
+    --subheader-height: 92px;
+    --header-total-height: calc(var(--header-height) + var(--subheader-height));
+}
+
 body {
     margin: 0;
     padding: 0;
+    background-color: #000000;
 }
 
 header img {
@@ -88,7 +95,7 @@ header img {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    min-height: 908px;
+    min-height: calc(100vh - var(--header-total-height));
     padding: 20px;
     position: relative;
 }
