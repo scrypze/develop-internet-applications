@@ -109,12 +109,12 @@ header img {
     position: relative;
 }
 
-.breadcrumb {
+.nav-trail {
     margin: 20px 0 10px 0;
     text-align: left;
 }
 
-.breadcrumb-text {
+.nav-trail-text {
     color: #cccccc;
     font-size: 16px;
     font-family: "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;

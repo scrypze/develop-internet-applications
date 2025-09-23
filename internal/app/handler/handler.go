@@ -61,8 +61,10 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 		logrus.Error(err)
 	}
 
+	from := ctx.Query("from")
 	ctx.HTML(http.StatusOK, "star.html", gin.H{
 		"star": star,
+		"from": from,
 	})
 
 }

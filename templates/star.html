@@ -19,8 +19,8 @@
         </div>
     </div>
     <div class="main-content">
-        <div class="breadcrumb">
-            <span class="breadcrumb-text">Звёзды / {{ .star.Title }}</span>
+        <div class="nav-trail">
+            <span class="nav-trail-text">Звёзды / {{ .star.Title }}</span>
         </div>
         <h1 class="star-title">{{ .star.Title }}</h1>
         
@@ -64,7 +64,7 @@
             </div>
         </div>
         
-        <a href="/stars" class="back-button">
+        <a href="{{ if eq .from "cart" }}/cart{{ else }}/stars{{ end }}" class="back-button">
             <span class="back-arrow">‹‹</span>
             Назад
         </a>

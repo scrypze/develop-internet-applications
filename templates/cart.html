@@ -45,7 +45,7 @@
                     <p class="cart-subtitle">Учёный: {{ .Scientist }}</p>
                     <p class="cart-subtitle">Дата рассчётов: {{ .Date }}</p>
                     <p class="cart-subtitle">Вероятность ≥1 планеты: ≈{{ .Probability }}%</p>
-                    <a href="/star/{{ .ID }}" class="details-button small">Подробнее</a>
+                    <a href="/star/{{ .ID }}?from=cart" class="details-button small">Подробнее</a>
                 </div>
                 <button class="remove-btn" aria-label="Удалить">×</button>
             </div>
