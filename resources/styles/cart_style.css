@@ -29,18 +29,19 @@
 .cart-field label {
     color: #ffffff;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .cart-field input {
     width: 360px;
     height: 44px;
-    border-radius: 14px;
+    border-radius: 20px;
     border: 1px solid #A9A9A9;
     background: rgba(12, 30, 62, 0.6);
     color: #ffffff;
     padding: 0 16px;
     text-align: center;
+    font-size: 20px;
 }
 
 .cart-list {
@@ -66,7 +67,7 @@
 
 .cart-thumb {
     width: 220px;
-    height: 180px;
+    height: 210px;
     margin: -16px 0 -16px -16px;
     border-radius: 20px;
     overflow: hidden;

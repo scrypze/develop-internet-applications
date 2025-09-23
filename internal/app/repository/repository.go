@@ -25,6 +25,9 @@ type Star struct {
 	Metallicity  string
 	Age          string
 	Distance     string
+	Scientist string
+	Date string
+	Probability int
 }
 
 func (r *Repository) GetStars() ([]Star, error) {
@@ -42,6 +45,9 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Metallicity:  "-0.55",
 			Age:          "~2-10 млрд лет",
 			Distance:     "~6.8 pc (~22 световых лет)",
+			Scientist: "Михаил Ломоносов",
+			Date: "12.10.2003",
+			Probability: 22,
 		},
 		{
 			ID:           2,
@@ -56,6 +62,9 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Metallicity:  "0.04",
 			Age:          "~7.6 млрд лет",
 			Distance:     "~12.1 pc (~39 световых лет)",
+			Scientist: "Григорий Шайн",
+			Date: "22.10.2010",
+			Probability: 31,
 		},
 		{
 			ID:           3,
@@ -70,6 +79,9 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Metallicity:  "0.00",
 			Age:          "~9.45 млрд лет",
 			Distance:     "~3.37 pc (~11 световых лет)",
+			Scientist: "Михаил Ломоносов",
+			Date: "12.10.2003",
+			Probability: 22,
 		},
 		{
 			ID:           4,
@@ -84,6 +96,9 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Metallicity:  "0.21",
 			Age:          "~4.85 млрд лет",
 			Distance:     "~1.30 pc (~4.24 световых лет)",
+			Scientist: "Гиппарх Никейский",
+			Date: "02.11.2011",
+			Probability: 42,
 		},
 	}
 
@@ -141,6 +156,9 @@ func (r *Repository) GetCart() ([]Star, int, error) {
 			Metallicity:  "-0.55",
 			Age:          "~2-10 млрд лет",
 			Distance:     "~6.8 pc (~22 световых лет)",
+			Scientist: "Михаил Ломоносов",
+			Date: "12.10.2003",
+			Probability: 22,
 		},
 		{
 			ID:           2,
@@ -155,6 +173,9 @@ func (r *Repository) GetCart() ([]Star, int, error) {
 			Metallicity:  "0.04",
 			Age:          "~7.6 млрд лет",
 			Distance:     "~12.1 pc (~39 световых лет)",
+			Scientist: "Григорий Шайн",
+			Date: "22.10.2010",
+			Probability: 31,
 		},
 		{
 			ID:           4,
@@ -169,6 +190,9 @@ func (r *Repository) GetCart() ([]Star, int, error) {
 			Metallicity:  "0.21",
 			Age:          "~4.85 млрд лет",
 			Distance:     "~1.30 pc (~4.24 световых лет)",
+			Scientist: "Гиппарх Никейский",
+			Date: "02.11.2011",
+			Probability: 42,
 		},
 	}
 
