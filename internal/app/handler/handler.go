@@ -24,24 +24,26 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	var stars []repository.Star
 	var err error
 
-	searchQuery := ctx.Query("query") // получаем значение из поля поиска
-	if searchQuery == "" {            // если поле поиска пусто, то просто получаем из репозитория все записи
+	searchQuery := ctx.Query("query")
+	if searchQuery == "" {
 		stars, err = h.Repository.GetStars()
 		if err != nil {
 			logrus.Error(err)
 		}
 	} else {
-		stars, err = h.Repository.GetStarsByTitle(searchQuery) // в ином случае ищем заказ по заголовку
+		stars, err = h.Repository.GetStarsByTitle(searchQuery)
 		if err != nil {
 			logrus.Error(err)
 		}
 	}
 
+	_, cartCount, _ := h.Repository.GetCart()
+
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
-		"time":  time.Now().Format("15:04:05"),
-		"stars": stars,
-		"query": searchQuery, // передаем введенный запрос обратно на страницу
-		// в ином случае оно будет очищаться при нажатии на кнопку
+		"time":      time.Now().Format("15:04:05"),
+		"stars":     stars,
+		"query":     searchQuery,
+		"cartCount": cartCount,
 	})
 }
 
@@ -62,4 +64,15 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 		"star": star,
 	})
 
+}
+
+func (h *Handler) GetCart(ctx *gin.Context) {
+	cart, cartCount, err := h.Repository.GetCart()
+	if err != nil {
+		logrus.Error(err)
+	}
+	ctx.HTML(http.StatusOK, "cart.html", gin.H{
+		"cart":      cart,
+		"cartCount": cartCount,
+	})
 }

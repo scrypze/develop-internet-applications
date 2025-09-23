@@ -125,3 +125,42 @@ func (r *Repository) GetStarsByTitle(title string) ([]Star, error) {
 
 	return result, nil
 }
+
+func (r *Repository) GetCart() ([]Star, int, error) {
+	cart := []Star{
+		{
+			ID:           1,
+			Title:        "Gliese 667",
+			Description:  "Красный карлик спектрального класса M1.5V",
+			ImagePath:    "http://localhost:9000/exocalc/gliese-667.png",
+			SpectralType: "M1.5V",
+			Temperature:  "~3700 K",
+			Radius:       "~0.42 R☉",
+			Mass:         "~0.33 M☉",
+			Luminosity:   "~0.014 L☉",
+			Metallicity:  "-0.55",
+			Age:          "~2-10 млрд лет",
+			Distance:     "~6.8 pc (~22 световых лет)",
+		},
+		{
+			ID:           2,
+			Title:        "TRAPPIST-1",
+			Description:  "Ультрахолодный красный карлик спектрального класса M8V",
+			ImagePath:    "http://localhost:9000/exocalc/trappist-1.png",
+			SpectralType: "M8V",
+			Temperature:  "~2550 K",
+			Radius:       "~0.12 R☉",
+			Mass:         "~0.09 M☉",
+			Luminosity:   "~0.0005 L☉",
+			Metallicity:  "0.04",
+			Age:          "~7.6 млрд лет",
+			Distance:     "~12.1 pc (~39 световых лет)",
+		},
+	}
+
+	if len(cart) == 0 {
+		return nil, len(cart), fmt.Errorf("массив пустой")
+	}
+
+	return cart, len(cart), nil
+}
