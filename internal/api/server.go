@@ -25,7 +25,7 @@ func StartServer() {
 	r.LoadHTMLGlob("templates/*")
 	r.Static("/static", "./resources")
 
-	r.GET("/hello", handler.GetStars)
+	r.GET("/stars", handler.GetStars)
 	r.GET("/star/:id", handler.GetStar)
 	r.GET("/cart", handler.GetCart)
 

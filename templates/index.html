@@ -7,20 +7,20 @@
     <header>
         <div class="main-header">
             <div class="header-content">
-                <a href="/hello"><img src="/static/img/image.png" alt="home"></a>
+                <a href="/stars"><img src="/static/img/image.png" alt="home"></a>
                 <h1>Экзопланетный калькулятор</h1>
             </div>
         </div>
     </header>
     <div class="gray-space">
         <div class="nav-buttons">
-            <a href="/hello" class="nav-btn active">Звёзды</a>
+            <a href="/stars" class="nav-btn active">Звёзды</a>
             <a href="/cart" class="nav-btn unactive">Заявки</a>
         </div>
     </div>
     <div class="main-content">
         <h1 class="page-title">Звёзды</h1>
-        <form class="search-form" action="/hello" method="GET">
+        <form class="search-form" action="/stars" method="GET">
             <input class="search-input" type="text" name="query" placeholder="Поиск звёзд" value="{{ .query }}" aria-label="Поиск звёзд">
             <button class="search-button" type="submit">Поиск</button>
         </form>
