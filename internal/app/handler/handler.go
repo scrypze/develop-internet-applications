@@ -38,12 +38,13 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	}
 
 	_, cartCount, _ := h.Repository.GetCart()
+	cartCountStr := strconv.Itoa(cartCount)
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
 		"time":      time.Now().Format("15:04:05"),
 		"stars":     stars,
 		"query":     searchQuery,
-		"cartCount": cartCount,
+		"cartCount": cartCountStr,
 	})
 }
 

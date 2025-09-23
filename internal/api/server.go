@@ -10,15 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// var lines = []string{"first line", "second line", "third line", "fourth line"}
-
-// func HelloHandler(ctx *gin.Context) {
-// 	ctx.HTML(http.StatusOK, "index.html", gin.H{
-// 	  "time":   time.Now().Format("15:04:05"),
-// 	  "massiv": lines,
-// 	})
-//   }
-
 func StartServer() {
 	log.Println("Start server")
 
