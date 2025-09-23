@@ -156,6 +156,20 @@ func (r *Repository) GetCart() ([]Star, int, error) {
 			Age:          "~7.6 млрд лет",
 			Distance:     "~12.1 pc (~39 световых лет)",
 		},
+		{
+			ID:           4,
+			Title:        "Proxima Centauri",
+			Description:  "Красный карлик спектрального класса M5.5V",
+			ImagePath:    "http://localhost:9000/exocalc/proxima.png",
+			SpectralType: "M5.5V",
+			Temperature:  "~3042 K",
+			Radius:       "~0.15 R☉",
+			Mass:         "~0.12 M☉",
+			Luminosity:   "~0.0017 L☉",
+			Metallicity:  "0.21",
+			Age:          "~4.85 млрд лет",
+			Distance:     "~1.30 pc (~4.24 световых лет)",
+		},
 	}
 
 	if len(cart) == 0 {

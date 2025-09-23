@@ -54,19 +54,21 @@
 .cart-item {
     display: grid;
     grid-template-columns: 220px 1fr auto;
-    gap: 24px;
-    align-items: center;
+    gap: 12px;
+    align-items: start;
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid #A9A9A9;
-    border-radius: 18px;
+    border-radius: 20px;
     padding: 16px;
     backdrop-filter: blur(10px);
+    overflow: hidden;
 }
 
 .cart-thumb {
     width: 220px;
-    height: 140px;
-    border-radius: 12px;
+    height: 180px;
+    margin: -16px 0 -16px -16px;
+    border-radius: 20px;
     overflow: hidden;
     border: 1px solid #A9A9A9;
 }
@@ -80,6 +82,10 @@
 
 .cart-info {
     color: #ffffff;
+    padding: 0px 12px 0px 0px;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
 }
 
 .cart-title {
@@ -96,6 +102,10 @@
     width: auto;
     padding: 8px 14px;
     height: auto;
+    margin-top: auto;
+    align-self: flex-start;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .remove-btn {
@@ -107,5 +117,6 @@
     color: #fff;
     font-size: 24px;
     cursor: pointer;
+    margin-right: 16px;
+    align-self: center;
 }
-
