@@ -28,6 +28,8 @@ type Star struct {
 	Scientist    string
 	Date         string
 	Probability  int
+	ProbableNumberOfPlanets float32
+	HabitableZone string
 }
 
 func (r *Repository) GetStars() ([]Star, error) {
@@ -47,7 +49,8 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Distance:     "~6.8 pc (~22 световых лет)",
 			Scientist:    "Михаил Ломоносов",
 			Date:         "12.10.2003",
-			Probability:  22,
+			ProbableNumberOfPlanets:  2.5,
+			HabitableZone: "0.12-0.24 a.e.",
 		},
 		{
 			ID:           2,
@@ -64,7 +67,8 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Distance:     "~12.1 pc (~39 световых лет)",
 			Scientist:    "Григорий Шайн",
 			Date:         "22.10.2010",
-			Probability:  31,
+			ProbableNumberOfPlanets:  2.5,
+			HabitableZone: "0.12-0.24 a.e.",
 		},
 		{
 			ID:           3,
@@ -81,7 +85,8 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Distance:     "~3.37 pc (~11 световых лет)",
 			Scientist:    "Михаил Ломоносов",
 			Date:         "12.10.2003",
-			Probability:  22,
+			ProbableNumberOfPlanets:  2.5,
+			HabitableZone: "0.12-0.24 a.e.",
 		},
 		{
 			ID:           4,
@@ -98,7 +103,8 @@ func (r *Repository) GetStars() ([]Star, error) {
 			Distance:     "~1.30 pc (~4.24 световых лет)",
 			Scientist:    "Гиппарх Никейский",
 			Date:         "02.11.2011",
-			Probability:  42,
+			ProbableNumberOfPlanets:  2.5,
+			HabitableZone: "0.12-0.24 a.e.",
 		},
 	}
 
@@ -158,7 +164,8 @@ func (r *Repository) GetCart() ([]Star, int, error) {
 			Distance:     "~6.8 pc (~22 световых лет)",
 			Scientist:    "Михаил Ломоносов",
 			Date:         "12.10.2003",
-			Probability:  22,
+			ProbableNumberOfPlanets:  2.5,
+			HabitableZone: "0.12-0.24 a.e.",
 		},
 		{
 			ID:           2,
@@ -175,7 +182,8 @@ func (r *Repository) GetCart() ([]Star, int, error) {
 			Distance:     "~12.1 pc (~39 световых лет)",
 			Scientist:    "Григорий Шайн",
 			Date:         "22.10.2010",
-			Probability:  31,
+			ProbableNumberOfPlanets:  2.5,
+			HabitableZone: "0.12-0.24 a.e.",
 		},
 		{
 			ID:           4,
@@ -192,7 +200,8 @@ func (r *Repository) GetCart() ([]Star, int, error) {
 			Distance:     "~1.30 pc (~4.24 световых лет)",
 			Scientist:    "Гиппарх Никейский",
 			Date:         "02.11.2011",
-			Probability:  42,
+			ProbableNumberOfPlanets:  2.5,
+			HabitableZone: "0.12-0.24 a.e.",
 		},
 	}
 
