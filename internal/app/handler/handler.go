@@ -87,6 +87,5 @@ func (h *Handler) GetStarsCartByID(ctx *gin.Context) {
 
 	ctx.HTML(http.StatusOK, "cart.html", gin.H{
 		"cart":      cart.StarsCartItems,
-		"cartCount": len(cart.StarsCartItems),
 	})
 }
