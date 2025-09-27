@@ -43,11 +43,11 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	starsCartSize := len(starsCart.StarsCartItems)
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
-		"time":      time.Now().Format("15:04:05"),
-		"stars":     stars,
-		"query":     searchQuery,
+		"time":          time.Now().Format("15:04:05"),
+		"stars":         stars,
+		"query":         searchQuery,
 		"starsCartSize": starsCartSize,
-		"starsCartID": starsCartID,
+		"starsCartID":   starsCartID,
 	})
 }
 
@@ -86,6 +86,6 @@ func (h *Handler) GetStarsCartByID(ctx *gin.Context) {
 	}
 
 	ctx.HTML(http.StatusOK, "cart.html", gin.H{
-		"cart":      cart.StarsCartItems,
+		"cart": cart.StarsCartItems,
 	})
 }
