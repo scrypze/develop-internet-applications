@@ -37,14 +37,17 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 		}
 	}
 
-	_, cartCount, _ := h.Repository.GetCart()
-	cartCountStr := strconv.Itoa(cartCount)
+	starsCartID := 1
+
+	starsCart, _ := h.Repository.GetStarsCartByID(starsCartID)
+	starsCartSize := len(starsCart.StarsCartItems)
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
 		"time":      time.Now().Format("15:04:05"),
 		"stars":     stars,
 		"query":     searchQuery,
-		"cartCount": cartCountStr,
+		"starsCartSize": starsCartSize,
+		"starsCartID": starsCartID,
 	})
 }
 
@@ -69,13 +72,21 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 
 }
 
-func (h *Handler) GetCart(ctx *gin.Context) {
-	cart, cartCount, err := h.Repository.GetCart()
+func (h *Handler) GetStarsCartByID(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+
+	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		logrus.Error(err)
 	}
+
+	cart, err := h.Repository.GetStarsCartByID(id)
+	if err != nil {
+		logrus.Error(err)
+	}
+
 	ctx.HTML(http.StatusOK, "cart.html", gin.H{
-		"cart":      cart,
-		"cartCount": cartCount,
+		"cart":      cart.StarsCartItems,
+		"cartCount": len(cart.StarsCartItems),
 	})
 }

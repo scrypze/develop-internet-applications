@@ -107,6 +107,21 @@ func (r *Repository) GetStarsCarts() ([]StarsCart, error) {
 	return starsCarts, nil
 }
 
+func (r *Repository) GetStarsCartByID(id int) (StarsCart, error) {
+	starsCarts, err := r.GetStarsCarts()
+	if err != nil {
+		return StarsCart{}, err
+	}
+
+	for _, starsCart := range starsCarts {
+		if starsCart.ID == id {
+			return starsCart, nil
+		}
+	}
+
+	return StarsCart{}, fmt.Errorf("корзина не найдена")
+}
+
 func (r *Repository) GetStars() ([]Star, error) {
 	stars := []Star{
 		{
@@ -220,69 +235,4 @@ func (r *Repository) GetStarsByTitle(title string) ([]Star, error) {
 	}
 
 	return result, nil
-}
-
-func (r *Repository) GetCart() ([]Star, int, error) {
-	cart := []Star{
-		{
-			ID:                      1,
-			Title:                   "Gliese 667",
-			Description:             "Красный карлик спектрального класса M1.5V",
-			ImagePath:               "http://localhost:9000/exocalc/gliese-667.png",
-			SpectralType:            "M1.5V",
-			Temperature:             "~3700 K",
-			Radius:                  "~0.42 R☉",
-			Mass:                    "~0.33 M☉",
-			Luminosity:              "~0.014 L☉",
-			Metallicity:             "-0.55",
-			Age:                     "~2-10 млрд лет",
-			Distance:                "~6.8 pc (~22 световых лет)",
-			Scientist:               "Михаил Ломоносов",
-			Date:                    "12.10.2003",
-			ProbableNumberOfPlanets: 2.5,
-			HabitableZone:           "0.12-0.24 a.e.",
-		},
-		{
-			ID:                      2,
-			Title:                   "TRAPPIST-1",
-			Description:             "Ультрахолодный красный карлик спектрального класса M8V",
-			ImagePath:               "http://localhost:9000/exocalc/trappist-1.png",
-			SpectralType:            "M8V",
-			Temperature:             "~2550 K",
-			Radius:                  "~0.12 R☉",
-			Mass:                    "~0.09 M☉",
-			Luminosity:              "~0.0005 L☉",
-			Metallicity:             "0.04",
-			Age:                     "~7.6 млрд лет",
-			Distance:                "~12.1 pc (~39 световых лет)",
-			Scientist:               "Григорий Шайн",
-			Date:                    "22.10.2010",
-			ProbableNumberOfPlanets: 2.5,
-			HabitableZone:           "0.12-0.24 a.e.",
-		},
-		{
-			ID:                      4,
-			Title:                   "Proxima Centauri",
-			Description:             "Красный карлик спектрального класса M5.5V",
-			ImagePath:               "http://localhost:9000/exocalc/proxima.png",
-			SpectralType:            "M5.5V",
-			Temperature:             "~3042 K",
-			Radius:                  "~0.15 R☉",
-			Mass:                    "~0.12 M☉",
-			Luminosity:              "~0.0017 L☉",
-			Metallicity:             "0.21",
-			Age:                     "~4.85 млрд лет",
-			Distance:                "~1.30 pc (~4.24 световых лет)",
-			Scientist:               "Гиппарх Никейский",
-			Date:                    "02.11.2011",
-			ProbableNumberOfPlanets: 2.5,
-			HabitableZone:           "0.12-0.24 a.e.",
-		},
-	}
-
-	if len(cart) == 0 {
-		return nil, len(cart), fmt.Errorf("массив пустой")
-	}
-
-	return cart, len(cart), nil
 }
