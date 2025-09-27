@@ -65,9 +65,11 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 	}
 
 	from := ctx.Query("from")
+	selectedStarsID := ctx.Query("selectedStarsID")
 	ctx.HTML(http.StatusOK, "star.html", gin.H{
-		"star": star,
-		"from": from,
+		"star":            star,
+		"from":            from,
+		"selectedStarsID": selectedStarsID,
 	})
 
 }
@@ -86,6 +88,7 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	}
 
 	ctx.HTML(http.StatusOK, "cart.html", gin.H{
-		"cart": list.SelectedStarsItems,
+		"cart":            list.SelectedStarsItems,
+		"selectedStarsID": id,
 	})
 }

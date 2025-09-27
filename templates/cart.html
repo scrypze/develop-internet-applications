@@ -41,7 +41,7 @@
                     <p class="cart-subtitle">Дата рассчётов: {{ .Date }}</p>
                     <p class="cart-subtitle">Вероятное число планет: ≈{{ .ProbableNumberOfPlanets }}</p>
                     <p class="cart-subtitle">Обитаемая зона: ≈{{ .HabitableZone }}</p>
-                    <a href="/star/{{ .ID }}?from=cart" class="details-button small">Подробнее</a>
+                    <a href="/star/{{ .ID }}?from=selected-stars&selectedStarsID={{ $.selectedStarsID }}" class="details-button small">Подробнее</a>
                 </div>
             </div>
             {{ end }}
