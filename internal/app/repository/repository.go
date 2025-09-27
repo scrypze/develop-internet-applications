@@ -32,16 +32,16 @@ type Star struct {
 	HabitableZone           string
 }
 
-type StarsCart struct {
-	ID             int
-	StarsCartItems []Star
+type SelectedStars struct {
+	ID                 int
+	SelectedStarsItems []Star
 }
 
-func (r *Repository) GetStarsCarts() ([]StarsCart, error) {
-	starsCarts := []StarsCart{
+func (r *Repository) GetSelectedStars() ([]SelectedStars, error) {
+	selected := []SelectedStars{
 		{
 			ID: 1,
-			StarsCartItems: []Star{
+			SelectedStarsItems: []Star{
 				{
 					ID:                      1,
 					Title:                   "Gliese 667",
@@ -100,26 +100,26 @@ func (r *Repository) GetStarsCarts() ([]StarsCart, error) {
 		},
 	}
 
-	if len(starsCarts) == 0 {
-		return nil, fmt.Errorf("массив корзин пустой")
+	if len(selected) == 0 {
+		return nil, fmt.Errorf("список выбранных звёзд пуст")
 	}
 
-	return starsCarts, nil
+	return selected, nil
 }
 
-func (r *Repository) GetStarsCartByID(id int) (StarsCart, error) {
-	starsCarts, err := r.GetStarsCarts()
+func (r *Repository) GetSelectedStarsByID(id int) (SelectedStars, error) {
+	lists, err := r.GetSelectedStars()
 	if err != nil {
-		return StarsCart{}, err
+		return SelectedStars{}, err
 	}
 
-	for _, starsCart := range starsCarts {
-		if starsCart.ID == id {
-			return starsCart, nil
+	for _, list := range lists {
+		if list.ID == id {
+			return list, nil
 		}
 	}
 
-	return StarsCart{}, fmt.Errorf("корзина не найдена")
+	return SelectedStars{}, fmt.Errorf("выбранные звёзды не найдены")
 }
 
 func (r *Repository) GetStars() ([]Star, error) {

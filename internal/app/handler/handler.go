@@ -37,17 +37,17 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 		}
 	}
 
-	starsCartID := 1
+	selectedStarsID := 1
 
-	starsCart, _ := h.Repository.GetStarsCartByID(starsCartID)
-	starsCartSize := len(starsCart.StarsCartItems)
+	selectedStars, _ := h.Repository.GetSelectedStarsByID(selectedStarsID)
+	selectedStarsSize := len(selectedStars.SelectedStarsItems)
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
-		"time":          time.Now().Format("15:04:05"),
-		"stars":         stars,
-		"searchedStar":  searchedStar,
-		"starsCartSize": starsCartSize,
-		"starsCartID":   starsCartID,
+		"time":              time.Now().Format("15:04:05"),
+		"stars":             stars,
+		"searchedStar":      searchedStar,
+		"selectedStarsSize": selectedStarsSize,
+		"selectedStarsID":   selectedStarsID,
 	})
 }
 
@@ -72,7 +72,7 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 
 }
 
-func (h *Handler) GetStarsCartByID(ctx *gin.Context) {
+func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 
 	id, err := strconv.Atoi(idStr)
@@ -80,12 +80,12 @@ func (h *Handler) GetStarsCartByID(ctx *gin.Context) {
 		logrus.Error(err)
 	}
 
-	cart, err := h.Repository.GetStarsCartByID(id)
+	list, err := h.Repository.GetSelectedStarsByID(id)
 	if err != nil {
 		logrus.Error(err)
 	}
 
 	ctx.HTML(http.StatusOK, "cart.html", gin.H{
-		"cart": cart.StarsCartItems,
+		"cart": list.SelectedStarsItems,
 	})
 }

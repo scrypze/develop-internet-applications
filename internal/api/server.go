@@ -27,7 +27,7 @@ func StartServer() {
 
 	r.GET("/stars", handler.GetStars)
 	r.GET("/star/:id", handler.GetStar)
-	r.GET("/cart/:id", handler.GetStarsCartByID)
+	r.GET("/selected-stars/:id", handler.GetSelectedStarsByID)
 
 	r.Run()
 	log.Println("Server down")
