@@ -24,14 +24,14 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	var stars []repository.Star
 	var err error
 
-	searchQuery := ctx.Query("query")
-	if searchQuery == "" {
+	searchedStar := ctx.Query("searchedStar")
+	if searchedStar == "" {
 		stars, err = h.Repository.GetStars()
 		if err != nil {
 			logrus.Error(err)
 		}
 	} else {
-		stars, err = h.Repository.GetStarsByTitle(searchQuery)
+		stars, err = h.Repository.GetStarsByTitle(searchedStar)
 		if err != nil {
 			logrus.Error(err)
 		}
@@ -45,7 +45,7 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
 		"time":          time.Now().Format("15:04:05"),
 		"stars":         stars,
-		"query":         searchQuery,
+		"searchedStar":  searchedStar,
 		"starsCartSize": starsCartSize,
 		"starsCartID":   starsCartID,
 	})
