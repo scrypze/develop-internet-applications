@@ -280,7 +280,7 @@ h2 {
     transform: translateY(-1px);
 }
 
-.cart-fab {
+.selected-stars-fab {
     position: fixed;
     left: 24px;
     bottom: 24px;
@@ -298,14 +298,14 @@ h2 {
     padding: 0 10px;
 }
 
-.cart-icon {
+.selected-stars-icon {
     width: 55px;
     height: 55px;
     background: url('http://localhost:9000/exocalc/cart.png') center/cover no-repeat;
     border-radius: 50%;
 }
 
-.cart-count {
+.selected-stars-count {
     color: #ffffff;
     font-weight: 800;
     font-size: 30px;
