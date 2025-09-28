@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
     <title>Экзопланетный калькулятор - Выбранные звёзды</title>
-    <link rel="stylesheet" href="/static/styles/cart_style.css">
+    <link rel="stylesheet" href="/static/styles/selected-stars_style.css">
     <link rel="stylesheet" href="/static/styles/index_style.css">
     <link rel="stylesheet" href="/static/styles/star_style.css">
 </head>
@@ -30,7 +30,7 @@
         </div>
 
         <div class="cart-list">
-            {{ range .cart }}
+            {{ range .selectedStars }}
             <div class="cart-item">
                 <div class="cart-thumb">
                     <img src="{{ .ImagePath }}" alt="{{ .Title }}">
@@ -55,4 +55,5 @@
     </div>
 </body>
 </html>
+
 

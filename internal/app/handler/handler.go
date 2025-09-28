@@ -87,8 +87,8 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		logrus.Error(err)
 	}
 
-	ctx.HTML(http.StatusOK, "cart.html", gin.H{
-		"cart":            list.SelectedStarsItems,
+	ctx.HTML(http.StatusOK, "selected-stars.html", gin.H{
+		"selectedStars":   list.SelectedStarsItems,
 		"selectedStarsID": id,
 	})
 }
