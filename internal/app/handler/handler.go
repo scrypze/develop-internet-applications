@@ -2,9 +2,9 @@ package handler
 
 import (
 	"develop-internet-applications/internal/app/repository"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-
 )
 
 type Handler struct {
@@ -25,7 +25,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 func (h *Handler) RegisterStatic(router *gin.Engine) {
 	router.LoadHTMLGlob("templates/*")
-	router.Static("/styles", "./styles")
+	router.Static("/static", "./resources")
 }
 
 func (h *Handler) errorHandler(ctx *gin.Context, errorStatusCode int, err error) {
