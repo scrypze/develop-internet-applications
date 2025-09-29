@@ -20,6 +20,25 @@ func NewHandler(r *repository.Repository) *Handler {
 	}
 }
 
+func (h *Handler) RegisterHandler(router *gin.Engine) {
+	router.GET("/stars", h.GetStars)
+	router.GET("/star/:id", h.GetStar)
+	router.GET("/selected-stars/:id", h.GetSelectedStarsByID)
+}
+
+func (h *Handler) RegisterStatic(router *gin.Engine) {
+	router.LoadHTMLGlob("templates/*")
+	router.Static("/styles", "./styles")
+}
+
+func (h *Handler) errorHandler(ctx *gin.Context, errorStatusCode int, err error) {
+	logrus.Error(err.Error())
+	ctx.JSON(errorStatusCode, gin.H{
+		"status":      "error",
+		"description": err.Error(),
+	})
+}
+
 func (h *Handler) GetStars(ctx *gin.Context) {
 	var stars []repository.Star
 	var err error
