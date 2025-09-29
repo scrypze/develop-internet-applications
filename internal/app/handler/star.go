@@ -18,14 +18,16 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	searchedStar := ctx.Query("searchedStar")
 	if searchedStar == "" {
 		stars, err = h.Repository.GetStars()
-		if err != nil {
-			logrus.Error(err)
-		}
 	} else {
 		stars, err = h.Repository.GetStarsByTitle(searchedStar)
-		if err != nil {
-			logrus.Error(err)
-		}
+	}
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		logrus.Error(err)
+		return
 	}
 
 	selectedStarsID := 1
@@ -51,8 +53,13 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 	}
 
 	star, err := h.Repository.GetStar(id)
+
 	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		logrus.Error(err)
+		return
 	}
 
 	from := ctx.Query("from")
@@ -62,7 +69,6 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 		"from":            from,
 		"selectedStarsID": selectedStarsID,
 	})
-
 }
 
 func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
