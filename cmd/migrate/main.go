@@ -1,11 +1,11 @@
 package main
 
 import (
+	"develop-internet-applications/internal/app/ds"
+	"develop-internet-applications/internal/app/dsn"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"develop-internet-applications/internal/app/ds"
-	"develop-internet-applications/internal/app/dsn"
 )
 
 func main() {
