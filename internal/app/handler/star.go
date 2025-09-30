@@ -5,10 +5,9 @@ import (
 	"strconv"
 	"time"
 
+	"develop-internet-applications/internal/app/ds"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"develop-internet-applications/internal/app/ds"
-	
 )
 
 func (h *Handler) GetStars(ctx *gin.Context) {
