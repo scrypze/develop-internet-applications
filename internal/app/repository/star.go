@@ -122,6 +122,6 @@ func (r *Repository) GetStarsByTitle(title string) ([]ds.Star, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return stars, nil
 }
