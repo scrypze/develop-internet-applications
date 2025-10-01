@@ -3,6 +3,7 @@ package main
 import (
 	"develop-internet-applications/internal/app/ds"
 	"develop-internet-applications/internal/app/dsn"
+
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,10 +16,13 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	// Migrate the schema
 	err = db.AutoMigrate(
 		&ds.Star{},
+		&ds.SelectedStars{},
+		&ds.CalculateExoplanets{},
+		&ds.Users{},
 	)
+	
 	if err != nil {
 		panic("cant migrate db")
 	}

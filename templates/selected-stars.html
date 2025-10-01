@@ -30,7 +30,7 @@
         </div>
 
         <div class="selected-stars-list">
-            {{ range .selectedStars }}
+            {{ range .selectedStars.SelectedStarsItems }}
             <div class="selected-stars-item">
                 <div class="selected-stars-thumb">
                     <img src="{{ .ImagePath }}" alt="{{ .Title }}">
@@ -39,8 +39,8 @@
                 <a href="/star/{{ .ID }}?from=selected-stars&selectedStarsID={{ $.selectedStarsID }}" class="details-button small">Подробнее</a>
                 <input class="selected-stars-comment" type="text" placeholder="Комментарий">
                 <div class="selected-stars-meta">
-                    <p class="selected-stars-subtitle">Учёный: {{ .Scientist }}</p>
-                    <p class="selected-stars-subtitle">Дата рассчётов: {{ .Date }}</p>
+                    <p class="selected-stars-subtitle">Учёный: {{ $.selectedStars.Scientist }}</p>
+                    <p class="selected-stars-subtitle">Дата расчётов: {{ $.selectedStars.Date.Format "02.01.2006" }}</p>
                     <p class="selected-stars-subtitle">Вероятное число планет: ≈{{ .ProbableNumberOfPlanets }}</p>
                     <p class="selected-stars-subtitle">Обитаемая зона: ≈{{ .HabitableZone }}</p>
                 </div>

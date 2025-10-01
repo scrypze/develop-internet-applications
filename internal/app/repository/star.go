@@ -3,91 +3,26 @@ package repository
 import (
 	"develop-internet-applications/internal/app/ds"
 	"fmt"
+	"time"
 )
 
 func (r *Repository) GetSelectedStars() ([]ds.SelectedStars, error) {
-	selected := []ds.SelectedStars{
-		{
-			ID: 1,
-			SelectedStarsItems: []ds.Star{
-				{
-					ID:                      1,
-					Title:                   "Gliese 667",
-					Description:             "Красный карлик спектрального класса M1.5V",
-					ImagePath:               "http://localhost:9000/exocalc/gliese-667.png",
-					SpectralType:            "M1.5V",
-					Temperature:             "~3700 K",
-					Radius:                  "~0.42 R☉",
-					Mass:                    "~0.33 M☉",
-					Luminosity:              "~0.014 L☉",
-					Metallicity:             "-0.55",
-					Age:                     "~2-10 млрд лет",
-					Distance:                "~6.8 pc (~22 световых лет)",
-					Scientist:               "Михаил Ломоносов",
-					Date:                    "12.10.2003",
-					ProbableNumberOfPlanets: 2.5,
-					HabitableZone:           "0.12-0.24 a.e.",
-				},
-				{
-					ID:                      2,
-					Title:                   "TRAPPIST-1",
-					Description:             "Ультрахолодный красный карлик спектрального класса M8V",
-					ImagePath:               "http://localhost:9000/exocalc/trappist-1.png",
-					SpectralType:            "M8V",
-					Temperature:             "~2550 K",
-					Radius:                  "~0.12 R☉",
-					Mass:                    "~0.09 M☉",
-					Luminosity:              "~0.0005 L☉",
-					Metallicity:             "0.04",
-					Age:                     "~7.6 млрд лет",
-					Distance:                "~12.1 pc (~39 световых лет)",
-					Scientist:               "Григорий Шайн",
-					Date:                    "22.10.2010",
-					ProbableNumberOfPlanets: 2.5,
-					HabitableZone:           "0.12-0.24 a.e.",
-				},
-				{
-					ID:                      3,
-					Title:                   "Ross 128",
-					Description:             "Красный карлик спектрального класса M4V",
-					ImagePath:               "http://localhost:9000/exocalc/ross-128.png",
-					SpectralType:            "M4V",
-					Temperature:             "~3192 K",
-					Radius:                  "~0.21 R☉",
-					Mass:                    "~0.16 M☉",
-					Luminosity:              "~0.0036 L☉",
-					Metallicity:             "0.00",
-					Age:                     "~9.45 млрд лет",
-					Distance:                "~3.37 pc (~11 световых лет)",
-					Scientist:               "Михаил Ломоносов",
-					Date:                    "12.10.2003",
-					ProbableNumberOfPlanets: 2.5,
-					HabitableZone:           "0.12-0.24 a.e.",
-				},
-			},
-		},
+	var lists []ds.SelectedStars
+	if err := r.db.Preload("SelectedStarsItems").Find(&lists).Error; err != nil {
+		return nil, err
 	}
-
-	if len(selected) == 0 {
+	if len(lists) == 0 {
 		return nil, fmt.Errorf("список выбранных звёзд пуст")
 	}
-
-	return selected, nil
+	return lists, nil
 }
 
 func (r *Repository) GetSelectedStarsByID(id int) (ds.SelectedStars, error) {
-	lists, err := r.GetSelectedStars()
-	if err != nil {
+	var list ds.SelectedStars
+	if err := r.db.Preload("SelectedStarsItems").First(&list, id).Error; err != nil {
 		return ds.SelectedStars{}, err
 	}
-
-	for _, list := range lists {
-		if list.ID == id {
-			return list, nil
-		}
-	}
-
-	return ds.SelectedStars{}, fmt.Errorf("выбранные звёзды не найдены")
+	return list, nil
 }
 
 func (r *Repository) GetStars() ([]ds.Star, error) {
@@ -100,6 +35,14 @@ func (r *Repository) GetStars() ([]ds.Star, error) {
 	}
 
 	return stars, nil
+}
+
+func mustParseDateDDMMYYYY(value string) time.Time {
+	t, err := time.Parse("02.01.2006", value)
+	if err != nil {
+		return time.Time{}
+	}
+	return t
 }
 
 func (r *Repository) GetStar(id int) (ds.Star, error) {

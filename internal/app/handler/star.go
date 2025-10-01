@@ -72,19 +72,18 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 
 func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
-
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		logrus.Error(err)
 	}
 
-	list, err := h.Repository.GetSelectedStarsByID(id)
+	selectedStars, err := h.Repository.GetSelectedStarsByID(id)
 	if err != nil {
 		logrus.Error(err)
 	}
 
 	ctx.HTML(http.StatusOK, "selected-stars.html", gin.H{
-		"selectedStars":   list.SelectedStarsItems,
+		"selectedStars":   selectedStars,
 		"selectedStarsID": id,
 	})
 }
