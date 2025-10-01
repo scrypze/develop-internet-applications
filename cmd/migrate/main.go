@@ -22,7 +22,7 @@ func main() {
 		&ds.CalculateExoplanets{},
 		&ds.Users{},
 	)
-	
+
 	if err != nil {
 		panic("cant migrate db")
 	}
