@@ -12,6 +12,7 @@ type SelectedStars struct {
 	ModeratorID        *int      `gorm:"column:moderator_id;null"`
 	Date               time.Time `gorm:"type:date"`
 	Scientist          string    `gorm:"type:varchar(64)"`
+	
 	Creator            Users     `gorm:"foreignKey:CreatorID"`
 	Moderator          Users     `gorm:"foreignKey:ModeratorID"`
 	SelectedStarsItems []Star    `gorm:"many2many:calculate_exoplanets;joinForeignKey:SelectedStarsID;joinReferences:StarID"`
