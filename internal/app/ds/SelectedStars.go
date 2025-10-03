@@ -14,5 +14,5 @@ type SelectedStars struct {
 	Scientist          string    `gorm:"type:varchar(64)"`
 	Creator            Users     `gorm:"foreignKey:CreatorID"`
 	Moderator          Users     `gorm:"foreignKey:ModeratorID"`
-	SelectedStarsItems []Star    `gorm:"many2many:calculate_exoplanets;joinForeignKey:SelectionStarsID;joinReferences:StarID"`
+	SelectedStarsItems []Star    `gorm:"many2many:calculate_exoplanets;joinForeignKey:SelectedStarsID;joinReferences:StarID"`
 }

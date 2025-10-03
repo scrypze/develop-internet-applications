@@ -12,3 +12,15 @@ func (r *Repository) GetCalculateExoplanets() (ds.CalculateExoplanets, error) {
 
 	return list, nil
 }
+
+func (r *Repository) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]ds.CalculateExoplanets, error) {
+	var rows []ds.CalculateExoplanets
+	if err := r.db.Where("selected_stars_id = ?", selectedStarsID).Find(&rows).Error; err != nil {
+		return nil, err
+	}
+	result := make(map[int]ds.CalculateExoplanets, len(rows))
+	for _, row := range rows {
+		result[row.StarID] = row
+	}
+	return result, nil
+}

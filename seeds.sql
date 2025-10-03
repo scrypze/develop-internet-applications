@@ -21,7 +21,7 @@ FROM creator
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO calculate_exoplanets (
-  selection_stars_id, star_id, comment, probable_number_of_planets, habitable_zone
+  selected_stars_id, star_id, comment, probable_number_of_planets, habitable_zone
 ) VALUES
   (1,1,'',2.5,'0.12-0.24 a.e.'),
   (1,2,'',2.5,'0.12-0.24 a.e.'),

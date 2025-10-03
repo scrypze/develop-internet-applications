@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"develop-internet-applications/internal/app/ds"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -82,8 +83,15 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		logrus.Error(err)
 	}
 
+	calcByStarID, err := h.Repository.GetCalculateExoplanetsBySelectedStarsID(id)
+	if err != nil {
+		logrus.Error(err)
+	}
+
 	ctx.HTML(http.StatusOK, "selected-stars.html", gin.H{
-		"selectedStars":   selectedStars,
+		"selected":        selectedStars,
+		"selectedStars":   selectedStars.SelectedStarsItems,
 		"selectedStarsID": id,
+		"calcByStarID":    calcByStarID,
 	})
 }
