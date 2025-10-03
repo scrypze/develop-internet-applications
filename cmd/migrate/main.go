@@ -17,10 +17,10 @@ func main() {
 	}
 
 	err = db.AutoMigrate(
-		&ds.Star{},
-		&ds.SelectedStars{},
-		&ds.CalculateExoplanets{},
 		&ds.Users{},
+		&ds.SelectedStars{},
+		&ds.Star{},
+		&ds.CalculateExoplanets{},
 	)
 
 	if err != nil {

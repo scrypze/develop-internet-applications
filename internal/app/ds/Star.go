@@ -13,8 +13,6 @@ type Star struct {
 	Metallicity             string  `gorm:"type:varchar(64)"`
 	Age                     string  `gorm:"type:varchar(64)"`
 	Distance                string  `gorm:"type:varchar(64)"`
-	ProbableNumberOfPlanets float32 `gorm:"type:real"`
-	HabitableZone           string  `gorm:"type:varchar(64)"`
+	// ProbableNumberOfPlanets float32 `gorm:"type:real"`
+	// HabitableZone           string  `gorm:"type:varchar(64)"`
 }
-
-func (Star) TableName() string { return "stars" }
