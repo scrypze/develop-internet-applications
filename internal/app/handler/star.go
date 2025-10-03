@@ -5,13 +5,14 @@ import (
 	"strconv"
 	"time"
 
-	"develop-internet-applications/internal/app/ds"
+	"develop-internet-applications/internal/app/model"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
 func (h *Handler) GetStars(ctx *gin.Context) {
-	var stars []ds.Star
+	var stars []model.Star
 	var err error
 
 	searchedStar := ctx.Query("searchedStar")

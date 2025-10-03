@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"develop-internet-applications/internal/app/ds"
+	"develop-internet-applications/internal/app/model"
 )
 
-func (r *Repository) GetStars() ([]ds.Star, error) {
-	var stars []ds.Star
+func (r *Repository) GetStars() ([]model.Star, error) {
+	var stars []model.Star
 
 	err := r.db.Find(&stars).Error
 
@@ -16,20 +16,20 @@ func (r *Repository) GetStars() ([]ds.Star, error) {
 	return stars, nil
 }
 
-func (r *Repository) GetStar(id int) (ds.Star, error) {
-	var star ds.Star
+func (r *Repository) GetStar(id int) (model.Star, error) {
+	var star model.Star
 
 	err := r.db.First(&star, id).Error
 
 	if err != nil {
-		return ds.Star{}, err
+		return model.Star{}, err
 	}
 
 	return star, nil
 }
 
-func (r *Repository) GetStarsByTitle(title string) ([]ds.Star, error) {
-	var stars []ds.Star
+func (r *Repository) GetStarsByTitle(title string) ([]model.Star, error) {
+	var stars []model.Star
 
 	err := r.db.Where("title ILIKE ?", "%"+title+"%").Find(&stars).Error
 

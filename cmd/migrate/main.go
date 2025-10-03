@@ -1,8 +1,8 @@
 package main
 
 import (
-	"develop-internet-applications/internal/app/ds"
 	"develop-internet-applications/internal/app/dsn"
+	"develop-internet-applications/internal/app/model"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -17,10 +17,10 @@ func main() {
 	}
 
 	err = db.AutoMigrate(
-		&ds.Users{},
-		&ds.SelectedStars{},
-		&ds.Star{},
-		&ds.CalculateExoplanets{},
+		&model.Users{},
+		&model.SelectedStars{},
+		&model.Star{},
+		&model.CalculateExoplanets{},
 	)
 
 	if err != nil {

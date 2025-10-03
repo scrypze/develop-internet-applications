@@ -1,12 +1,12 @@
 package repository
 
 import (
-	"develop-internet-applications/internal/app/ds"
+	"develop-internet-applications/internal/app/model"
 	"fmt"
 )
 
-func (r *Repository) GetSelectedStars() ([]ds.SelectedStars, error) {
-	var lists []ds.SelectedStars
+func (r *Repository) GetSelectedStars() ([]model.SelectedStars, error) {
+	var lists []model.SelectedStars
 	if err := r.db.Preload("SelectedStarsItems").Find(&lists).Error; err != nil {
 		return nil, err
 	}
@@ -16,10 +16,10 @@ func (r *Repository) GetSelectedStars() ([]ds.SelectedStars, error) {
 	return lists, nil
 }
 
-func (r *Repository) GetSelectedStarsByID(id int) (ds.SelectedStars, error) {
-	var list ds.SelectedStars
+func (r *Repository) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
+	var list model.SelectedStars
 	if err := r.db.Preload("SelectedStarsItems").First(&list, id).Error; err != nil {
-		return ds.SelectedStars{}, err
+		return model.SelectedStars{}, err
 	}
 	return list, nil
 }
