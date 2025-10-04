@@ -32,7 +32,6 @@ func (r *Repository) GetSelectedStarsCount() int64 {
 
 	creatorID := 1
 
-	
 	err := r.db.Model(&model.SelectedStars{}).
 		Where("creator_id = ? AND status = ?", creatorID, "draft").
 		Select("id").

@@ -32,15 +32,12 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 
 	selectedStarsID := 1
 
-	selectedStars, _ := h.Repository.GetSelectedStarsByID(selectedStarsID)
-	selectedStarsSize := len(selectedStars.SelectedStarsItems)
-
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
-		"time":              time.Now().Format("15:04:05"),
-		"stars":             stars,
-		"searchedStar":      searchedStar,
-		"selectedStarsSize": selectedStarsSize,
-		"selectedStarsID":   selectedStarsID,
+		"time":            time.Now().Format("15:04:05"),
+		"stars":           stars,
+		"selectedStarsCount": h.Repository.GetSelectedStarsCount(),
+		"searchedStar":    searchedStar,
+		"selectedStarsID": selectedStarsID,
 	})
 }
 
