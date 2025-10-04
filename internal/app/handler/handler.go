@@ -19,7 +19,7 @@ func NewHandler(r *repository.Repository) *Handler {
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.GET("/stars", h.GetStars)
-	router.GET("/star/:id", h.GetStar)
+	router.GET("/star/:id", h.GetStarByID)
 	router.GET("/selected-stars/:id", h.GetSelectedStarsByID)
 }
 

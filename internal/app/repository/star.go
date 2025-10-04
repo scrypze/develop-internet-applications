@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"database/sql"
 	"develop-internet-applications/internal/app/model"
+	"errors"
 )
 
 func (r *Repository) GetStars() ([]model.Star, error) {
@@ -16,13 +18,33 @@ func (r *Repository) GetStars() ([]model.Star, error) {
 	return stars, nil
 }
 
-func (r *Repository) GetStar(id int) (model.Star, error) {
-	var star model.Star
+func (r *Repository) GetStarByID(id int) (*model.Star, error) {
+	query := "SELECT id, title, description, image_path, spectral_type, temperature, radius, mass, luminosity, metallicity, age, distance FROM stars WHERE id = $1"
 
-	err := r.db.First(&star, id).Error
+	row := r.db.Raw(query, id).Row()
+
+	star := &model.Star{}
+
+	err := row.Scan(
+		&star.ID,
+		&star.Title,
+		&star.Description,
+		&star.ImagePath,
+		&star.SpectralType,
+		&star.Temperature,
+		&star.Radius,
+		&star.Mass,
+		&star.Luminosity,
+		&star.Metallicity,
+		&star.Age,
+		&star.Distance,
+	)
 
 	if err != nil {
-		return model.Star{}, err
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, err
 	}
 
 	return star, nil

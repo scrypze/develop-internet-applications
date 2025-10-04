@@ -41,7 +41,7 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	})
 }
 
-func (h *Handler) GetStar(ctx *gin.Context) {
+func (h *Handler) GetStarByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 
 	id, err := strconv.Atoi(idStr)
@@ -49,7 +49,7 @@ func (h *Handler) GetStar(ctx *gin.Context) {
 		logrus.Error(err)
 	}
 
-	star, err := h.Repository.GetStar(id)
+	star, err := h.Repository.GetStarByID(id)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
