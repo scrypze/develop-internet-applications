@@ -31,13 +31,14 @@ func (r *Repository) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int
 
 func (r *Repository) AddStarIntoSelectedStars(id int) error {
 	var selectedStarsID int
-	
-	creatorID := 1
 
+	creatorID := 1
+	
 	err := r.db.Model(&model.SelectedStars{}).
 		Where("creator_id = ? AND status = ?", creatorID, "draft").
 		Select("id").
 		First(&selectedStarsID).Error 
+
 
 	if err != nil {
 		return err

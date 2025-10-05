@@ -48,10 +48,15 @@
             {{ end }}
         </div>
 
-        <a href="/stars" class="back-button">
-            <span class="back-arrow">‹‹</span>
-            Назад
-        </a>
+        <div class="actions-bottom">
+            <a href="/stars" class="back-button">
+                <span class="back-arrow">‹‹</span>
+                Назад
+            </a>
+            <form action="/selected-stars/delete-selected-stars/{{ .selectedStarsID }}" method="POST">
+                <button type="submit" class="delete-button">Удалить заявку</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>
