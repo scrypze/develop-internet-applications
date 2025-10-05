@@ -29,7 +29,12 @@
                 <div class="star-info">
                     <h3 class="star-title">{{ .Title }}</h3>
                     <p class="star-description">{{ .Description }}</p>
-                    <a href="/star/{{ .ID }}" class="details-button">Подробнее</a>
+                    <div class="star-actions">
+                        <a href="/star/{{ .ID }}" class="details-button">Подробнее</a>
+                        <form action="/selected-stars/add/{{ .ID }}" method="POST">
+                            <button class="details-button add-button" type="submit">Добавить в заявку</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             {{ end }}

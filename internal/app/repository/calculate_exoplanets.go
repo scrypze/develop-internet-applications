@@ -1,6 +1,10 @@
 package repository
 
-import "develop-internet-applications/internal/app/model"
+import (
+	"develop-internet-applications/internal/app/model"
+
+	"gorm.io/gorm/clause"
+)
 
 func (r *Repository) GetCalculateExoplanets() (model.CalculateExoplanets, error) {
 	var list model.CalculateExoplanets
@@ -23,4 +27,36 @@ func (r *Repository) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int
 		result[row.StarID] = row
 	}
 	return result, nil
+}
+
+func (r *Repository) AddStarIntoSelectedStars(id int) error {
+	var selectedStarsID int
+	creatorID := 1
+
+	err := r.db.Model(&model.SelectedStars{}).
+		Where("creator_id = ? AND status = ?", creatorID, "draft").
+		Select("id").
+		First(&selectedStarsID).Error 
+
+	if err != nil {
+		return err
+	}
+
+	rec := model.CalculateExoplanets{
+		SelectedStarsID: selectedStarsID,
+		StarID:          id,
+	}
+
+	err = r.db.Clauses(
+		clause.OnConflict{
+			Columns:   []clause.Column{{Name: "selected_stars_id"}, {Name: "star_id"}},
+			DoNothing: true,
+		},
+	).Create(&rec).Error
+	
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

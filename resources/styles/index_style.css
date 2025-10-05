@@ -234,6 +234,16 @@ h2 {
     flex: 1;
 }
 
+.star-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.add-button {
+    background: rgba(0, 128, 0, 0.5);
+}
+
 .star-title {
     color: #ffffff;
     font-size: 20px;

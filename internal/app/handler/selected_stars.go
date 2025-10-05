@@ -32,3 +32,19 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		"calcByStarID":    calcByStarID,
 	})
 }
+
+func (h *Handler) AddStarToSelected(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.Repository.AddStarIntoSelectedStars(id); err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.Redirect(http.StatusSeeOther, "/stars")
+}
