@@ -22,6 +22,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.GET("/star/:id", h.GetStarByID)
 	router.GET("/selected-stars/:id", h.GetSelectedStarsByID)
 	router.POST("/selected-stars/add-star/:id", h.AddStarToSelected)
+	router.POST("/selected-stars/delete/:id", h.DeleteSelectedStars)
 }
 
 func (h *Handler) RegisterStatic(router *gin.Engine) {

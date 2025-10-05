@@ -48,3 +48,22 @@ func (h *Handler) AddStarToSelected(ctx *gin.Context) {
 
 	ctx.Redirect(http.StatusSeeOther, "/stars")
 }
+
+func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	err = h.Repository.DeleteSelectedStars(id)
+
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.Redirect(http.StatusSeeOther, "/stars")
+}
