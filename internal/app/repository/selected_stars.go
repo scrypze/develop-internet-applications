@@ -10,7 +10,11 @@ import (
 func (r *Repository) GetSelectedStars() ([]model.SelectedStars, error) {
 	var lists []model.SelectedStars
 
-	if err := r.db.Preload("SelectedStarsItems").Find(&lists).Error; err != nil {
+	err := r.db.Preload("SelectedStarsItems").
+		Where("status = draft").
+		Find(&lists).Error
+
+	if err != nil {
 		return nil, err
 	}
 
@@ -25,6 +29,7 @@ func (r *Repository) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
 	var list model.SelectedStars
 
 	err := r.db.Preload("SelectedStarsItems").
+		Where("status = draft").
 		First(&list, id).Error
 
 	if err != nil {
@@ -62,10 +67,13 @@ func (r *Repository) GetSelectedStarsCount() int64 {
 }
 
 func (r *Repository) DeleteSelectedStars(selectedStarsID int) error {
-	if err := r.db.Model(&model.SelectedStars{}).
+	err := r.db.Model(&model.SelectedStars{}).
 		Where("id = ?", selectedStarsID).
-		Update("status", "is_delete").Error; err != nil {
+		Update("status", "is_delete").Error
+
+	if err != nil {
 		return fmt.Errorf("ошибка удаления списка выбранных звёзд с id %d: %w", selectedStarsID, err)
 	}
+	
 	return nil
 }
