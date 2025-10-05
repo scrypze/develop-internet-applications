@@ -40,7 +40,7 @@ func (r *Repository) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
 }
 
 func (r *Repository) GetSelectedStarsCount() int64 {
-	var selectedStarsID int
+	var selectedStarsID uint
 	var count int64
 
 	creatorID := 1
@@ -76,4 +76,20 @@ func (r *Repository) DeleteSelectedStars(selectedStarsID int) error {
 	}
 
 	return nil
+}
+
+func (r *Repository) GetCurrentDraftID(creatorID uint) (int, error) {
+	var id int
+
+	err := r.db.Model(&model.SelectedStars{}).
+		Where("creator_id = ? AND status = ?", creatorID, "draft").
+		Order("id DESC").
+		Select("id").
+		First(&id).Error
+	
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }

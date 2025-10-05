@@ -30,7 +30,8 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 		return
 	}
 
-	selectedStarsID := 1
+	creatorID := 1
+	selectedStarsID, err := h.Repository.GetCurrentDraftID(uint(creatorID)) 
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
 		"time":            time.Now().Format("15:04:05"),

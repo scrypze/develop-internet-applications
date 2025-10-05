@@ -39,7 +39,17 @@
             </div>
             {{ end }}
         </div>
-        <a href="/selected-stars/{{ .selectedStarsID }}" class="selected-stars-fab"><span class="selected-stars-icon"></span><span class="selected-stars-count">{{ .selectedStarsCount }}</span></a>
+        {{ if gt .selectedStarsID 0 }}
+        <a href="/selected-stars/{{ .selectedStarsID }}" class="selected-stars-fab">
+            <span class="selected-stars-icon"></span>
+            <span class="selected-stars-count">{{ .selectedStarsCount }}</span>
+        </a>
+        {{ else }}
+        <div class="selected-stars-fab" style="pointer-events:none; opacity:0.5;">
+            <span class="selected-stars-icon"></span>
+            <span class="selected-stars-count">{{ .selectedStarsCount }}</span>
+        </div>
+        {{ end }}
     </div>
 </body>
 </html>
