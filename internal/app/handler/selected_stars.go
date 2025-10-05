@@ -11,16 +11,19 @@ import (
 func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
+	
 	if err != nil {
 		logrus.Error(err)
 	}
 
 	selectedStars, err := h.Repository.GetSelectedStarsByID(id)
+
 	if err != nil {
 		logrus.Error(err)
 	}
 
 	calcByStarID, err := h.Repository.GetCalculateExoplanetsBySelectedStarsID(id)
+
 	if err != nil {
 		logrus.Error(err)
 	}
@@ -36,12 +39,15 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 func (h *Handler) AddStarToSelected(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
+
 	if err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := h.Repository.AddStarIntoSelectedStars(id); err != nil {
+	err = h.Repository.AddStarIntoSelectedStars(id)
+
+	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
 	}
