@@ -4,7 +4,6 @@ import (
 	"develop-internet-applications/internal/app/model"
 	"fmt"
 
-	"github.com/sirupsen/logrus"
 )
 
 func (r *Repository) GetSelectedStars() ([]model.SelectedStars, error) {
@@ -40,26 +39,28 @@ func (r *Repository) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
 }
 
 func (r *Repository) GetSelectedStarsCount() int64 {
-	var selectedStarsID uint
+	var selectedStarsID int
 	var count int64
-
 	creatorID := 1
 
 	err := r.db.Model(&model.SelectedStars{}).
 		Where("creator_id = ? AND status = ?", creatorID, "draft").
-		Select("id").
-		First(&selectedStarsID).Error
+		Order("id DESC").Limit(1).
+		Pluck("id", &selectedStarsID).Error
 
 	if err != nil {
+		return 0
+	}
+
+	if selectedStarsID == 0 {
 		return 0
 	}
 
 	err = r.db.Model(&model.CalculateExoplanets{}).
 		Where("selected_stars_id = ?", selectedStarsID).
 		Count(&count).Error
-
+		
 	if err != nil {
-		logrus.Error("error counting records in calculate_exoplanets:", err)
 		return 0
 	}
 
@@ -85,7 +86,7 @@ func (r *Repository) GetCurrentDraftID(creatorID uint) (int, error) {
 		Where("creator_id = ? AND status = ?", creatorID, "draft").
 		Order("id DESC").
 		Select("id").
-		First(&id).Error
+		Pluck("id", &id).Error
 	
 	if err != nil {
 		return 0, err

@@ -2,7 +2,6 @@ package repository
 
 import (
 	"develop-internet-applications/internal/app/model"
-	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -33,43 +32,41 @@ func (r *Repository) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int
 }
 
 func (r *Repository) AddStarIntoSelectedStars(starID int) error {
-    creatorID := 1
+	creatorID := 1
 
-    return r.db.Transaction(func(tx *gorm.DB) error {
-        var draft model.SelectedStars
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		var draft model.SelectedStars
 
-        err := tx.Where("creator_id = ? AND status = ?", creatorID, "draft").First(&draft).Error
+		err := tx.Where("creator_id = ? AND status = ?", creatorID, "draft").
+			Order("id DESC").Limit(1).
+			Find(&draft).Error
 
-        if errors.Is(err, gorm.ErrRecordNotFound) {
-            draft = model.SelectedStars{
-                Status:    "draft",
-                CreatorID: creatorID,
-                CreatedAt:      time.Now(),
-            }
+		if err != nil {
+			return err
+		}
 
-            err := tx.Create(&draft).Error
+		if draft.ID == 0 {
+			draft = model.SelectedStars{
+				Status:    "draft",
+				CreatorID: creatorID,
+				Date:      time.Now(),
+			}
+			
+			err := tx.Create(&draft).Error
 
 			if err != nil {
-                return err
-            }
+				return err
+			}
+		}
 
-        } else if err != nil {
-            return err
-        }
-
-        rec := model.CalculateExoplanets{
-            SelectedStarsID: draft.ID,
-            StarID:          starID,
-        }
+		rec := model.CalculateExoplanets{
+			SelectedStarsID: draft.ID,
+			StarID:          starID,
+		}
 		
-        if err := tx.Clauses(
-            clause.OnConflict{
-                Columns:   []clause.Column{{Name: "selected_stars_id"}, {Name: "star_id"}},
-                DoNothing: true,
-            },
-        ).Create(&rec).Error; err != nil {
-            return err
-        }
-        return nil
-    })
+		return tx.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "selected_stars_id"}, {Name: "star_id"}},
+			DoNothing: true,
+		}).Create(&rec).Error
+	})
 }
