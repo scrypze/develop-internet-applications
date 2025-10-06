@@ -1,14 +1,13 @@
-package repository
+package service
 
 import (
 	"develop-internet-applications/internal/model"
-
-	// "gitlab.c2g.pw/back/alertjournal/db"
-	// "gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"develop-internet-applications/internal/repository"
+	"develop-internet-applications/pkg"
 )
 
-type Repository struct {
+
+type Service struct {
 	Star
 }
 
@@ -19,12 +18,11 @@ type Star interface {
 	CreateStar(star *model.Star) (model.Star, error)
 	UpdateStar(id int, star *model.Star) (error)
 	DeleteStar(id int) (error)
-	UpdateStarImage(id int, imagePath string) error
+	UploadMaterialImage(id int, file []byte, filename string) error
 }
 
-func NewRepository(db *gorm.DB) *Repository {
-	return &Repository{
-      Star: NewStarPostgres(db),
-   }
+func NewService(repo *repository.Repository, minio *pkg.MinioClient) *Service {
+	return &Service{
+		Star: NewStarService(repo.Star, minio),
+	}
 }
-

@@ -1,20 +1,18 @@
 package handler
 
 import (
-	"develop-internet-applications/internal/repository"
+	"develop-internet-applications/internal/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
-type Handler struct {
-	Repository *repository.Repository
+type Handler struct{
+	service *service.Service
 }
 
-func NewHandler(r *repository.Repository) *Handler {
-	return &Handler{
-		Repository: r,
-	}
+func NewHandler(service *service.Service) *Handler {
+	return &Handler{service: service}
 }
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {

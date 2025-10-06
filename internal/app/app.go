@@ -11,6 +11,8 @@ import (
 
 	"develop-internet-applications/internal/handler"
 	"develop-internet-applications/internal/repository"
+	"develop-internet-applications/internal/service"
+	"develop-internet-applications/pkg"
 	"develop-internet-applications/pkg/config"
 
 	"github.com/gin-gonic/gin"
@@ -60,27 +62,33 @@ func (a *Application) RunApp() {
 }
 
 func RunApp() {
-	router := gin.Default()
+	logrus.SetFormatter(new(logrus.JSONFormatter))
 
 	conf, err := config.NewConfig()
 	if err != nil {
 		logrus.Fatalf("error loading config: %v", err)
 	}
 
-	postgresString := config.ConfDB()
-	if postgresString == "" {
-		logrus.Fatalf("empty database DSN; check environment variables")
+	postgresCofigString := config.ConfDB()
+	db, err := pkg.NewPostgresDB(postgresCofigString)
+	if err != nil {
+		logrus.Fatal(err.Error())
 	}
 
-	config.MigrateDB()
+	minioClient, err := pkg.NewMinioClient()
+    if err != nil {
+        logrus.Fatalf("failed to create minio client: %v", err)
+    }
 
-	rep, errRep := repository.New(postgresString)
-	if errRep != nil {
-		logrus.Fatalf("error initializing repository: %v", errRep)
+	repository := repository.NewRepository(db)
+	service := service.NewService(repository, minioClient)
+	handler := handler.NewHandler(service)
+	router := gin.Default()
+
+	app := &Application{
+		Config:  conf,
+		Router:  router,
+		Handler: handler,
 	}
-
-	hand := handler.NewHandler(rep)
-
-	application := NewApp(conf, router, hand)
-	application.RunApp()
+	app.RunApp()
 }
