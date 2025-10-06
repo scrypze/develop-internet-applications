@@ -51,7 +51,7 @@ func (r *Repository) AddStarIntoSelectedStars(starID int) error {
 				CreatorID: creatorID,
 				Date:      time.Now(),
 			}
-			
+
 			err := tx.Create(&draft).Error
 
 			if err != nil {
@@ -63,7 +63,7 @@ func (r *Repository) AddStarIntoSelectedStars(starID int) error {
 			SelectedStarsID: draft.ID,
 			StarID:          starID,
 		}
-		
+
 		return tx.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "selected_stars_id"}, {Name: "star_id"}},
 			DoNothing: true,

@@ -31,14 +31,14 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	}
 
 	creatorID := 1
-	selectedStarsID, err := h.Repository.GetCurrentDraftID(uint(creatorID)) 
+	selectedStarsID, err := h.Repository.GetCurrentDraftID(uint(creatorID))
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
-		"time":            time.Now().Format("15:04:05"),
-		"stars":           stars,
+		"time":               time.Now().Format("15:04:05"),
+		"stars":              stars,
 		"selectedStarsCount": h.Repository.GetSelectedStarsCount(),
-		"searchedStar":    searchedStar,
-		"selectedStarsID": selectedStarsID,
+		"searchedStar":       searchedStar,
+		"selectedStarsID":    selectedStarsID,
 	})
 }
 

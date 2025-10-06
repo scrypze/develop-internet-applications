@@ -3,7 +3,6 @@ package repository
 import (
 	"develop-internet-applications/internal/app/model"
 	"fmt"
-
 )
 
 func (r *Repository) GetSelectedStars() ([]model.SelectedStars, error) {
@@ -59,7 +58,7 @@ func (r *Repository) GetSelectedStarsCount() int64 {
 	err = r.db.Model(&model.CalculateExoplanets{}).
 		Where("selected_stars_id = ?", selectedStarsID).
 		Count(&count).Error
-		
+
 	if err != nil {
 		return 0
 	}
@@ -87,7 +86,7 @@ func (r *Repository) GetCurrentDraftID(creatorID uint) (int, error) {
 		Order("id DESC").
 		Select("id").
 		Pluck("id", &id).Error
-	
+
 	if err != nil {
 		return 0, err
 	}

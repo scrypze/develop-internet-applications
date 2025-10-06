@@ -11,7 +11,7 @@ import (
 func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
-	
+
 	if err != nil {
 		logrus.Error(err)
 	}
