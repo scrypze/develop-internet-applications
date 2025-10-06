@@ -11,7 +11,7 @@ import (
 
 	"develop-internet-applications/internal/handler"
 	"develop-internet-applications/internal/repository"
-	"develop-internet-applications/internal/pkg/config"
+	"develop-internet-applications/pkg/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
