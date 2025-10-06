@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"develop-internet-applications/internal/app/model"
+	"develop-internet-applications/internal/model"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"

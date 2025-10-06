@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"develop-internet-applications/internal/app/model"
+	"develop-internet-applications/internal/model"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"

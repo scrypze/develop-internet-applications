@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"develop-internet-applications/internal/app/model"
+	"develop-internet-applications/internal/model"
 	"fmt"
 )
 

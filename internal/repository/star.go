@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"develop-internet-applications/internal/app/model"
+	"develop-internet-applications/internal/model"
 	"errors"
 )
 

@@ -1,4 +1,4 @@
-package pkg
+package app
 
 import (
 	"context"
@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"develop-internet-applications/internal/app/handler"
-	"develop-internet-applications/internal/app/repository"
+	"develop-internet-applications/internal/handler"
+	"develop-internet-applications/internal/repository"
 	"develop-internet-applications/internal/pkg/config"
 
 	"github.com/gin-gonic/gin"

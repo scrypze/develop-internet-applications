@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"develop-internet-applications/internal/app/repository"
+	"develop-internet-applications/internal/repository"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
