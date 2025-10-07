@@ -3,6 +3,7 @@ package repository
 import (
 	"develop-internet-applications/internal/model"
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -102,7 +103,10 @@ func (r *SelectedStarsPostgres) GetSelectedStarsCount() int64 {
 func (r *SelectedStarsPostgres) DeleteSelectedStars(selectedStarsID int) error {
 	err := r.db.Model(&model.SelectedStars{}).
 		Where("id = ?", selectedStarsID).
-		Update("status", "is_delete").Error
+		Updates(map[string]interface{}{
+			"status":    "is_delete",
+			"formed_at": time.Now(),
+		}).Error
 
 	if err != nil {
 		return fmt.Errorf("ошибка удаления списка выбранных звёзд с id %d: %w", selectedStarsID, err)

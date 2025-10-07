@@ -31,6 +31,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	selectedStars := api.Group("/selected-stars")
 	{
 		selectedStars.GET("/:id", h.GetSelectedStarsByID)
+		selectedStars.DELETE("/:id", h.DeleteSelectedStars)
 		selectedStars.POST("/add-star/:id", h.AddStarToSelected)
 		selectedStars.POST("/delete-selected-stars/:id", h.DeleteSelectedStars)
 		selectedStars.GET("", h.GetSelectedStars)
