@@ -31,6 +31,7 @@ type SelectedStars interface {
 	GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error)
 	GetSelectedStarsFiltered(dateFrom, dateTo, status string) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
+	FormSelectedStars(id int) error
 }
 
 func NewService(repo *repository.Repository, minio *pkg.MinioClient) *Service {

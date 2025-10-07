@@ -38,7 +38,6 @@ func (r *SelectedStarsPostgres) GetSelectedStarsByID(id int) (model.SelectedStar
 	var list model.SelectedStars
 
 	err := r.db.Preload("Creator").Preload("Moderator").Preload("SelectedStarsItems").
-		Where("status = ?", "draft").
 		First(&list, id).Error
 
 	if err != nil {
@@ -47,6 +46,8 @@ func (r *SelectedStarsPostgres) GetSelectedStarsByID(id int) (model.SelectedStar
 
 	return list, nil
 }
+
+
 
 func (r *SelectedStarsPostgres) GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error) {
 	var lists []model.SelectedStars
@@ -143,4 +144,11 @@ func (r *SelectedStarsPostgres) UpdateSelectedStars(id int, date string, scienti
 		return nil
 	}
 	return r.db.Model(&model.SelectedStars{}).Where("id = ?", id).Updates(updates).Error
+}
+
+func (r *SelectedStarsPostgres) FormSelectedStars(id int) error {
+	return r.db.Model(&model.SelectedStars{}).Where("id = ?", id).Updates(map[string]interface{}{
+		"status":    "formed",
+		"formed_at": time.Now(),
+	}).Error
 }

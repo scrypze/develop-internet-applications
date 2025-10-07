@@ -3,6 +3,7 @@ package service
 import (
 	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/repository"
+	"fmt"
 )
 
 type SelectedStarsService struct {
@@ -47,4 +48,18 @@ func (s *SelectedStarsService) GetSelectedStarsFiltered(dateFrom, dateTo, status
 
 func (s *SelectedStarsService) UpdateSelectedStars(id int, date string, scientist string) error {
 	return s.repo.UpdateSelectedStars(id, date, scientist)
+}
+
+func (s *SelectedStarsService) FormSelectedStars(id int) error {
+	entity, err := s.repo.GetSelectedStarsByID(id)
+	if err != nil {
+		return err
+	}
+	if entity.Scientist == "" || entity.Date.IsZero() {
+		return fmt.Errorf("required fields are empty")
+	}
+	if len(entity.SelectedStarsItems) == 0 {
+		return fmt.Errorf("no stars in the selected list")
+	}
+	return s.repo.FormSelectedStars(id)
 }

@@ -220,3 +220,25 @@ func (h *Handler) UpdateSelectedStars(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"selected-stars": updated})
 }
+
+func (h *Handler) FormSelectedStars(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.service.FormSelectedStars(id); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	updated, err := h.service.GetSelectedStarsByID(id)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"selected-stars": updated})
+}

@@ -31,6 +31,7 @@ type SelectedStars interface {
 	GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error)
 	GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
+	FormSelectedStars(id int) error
 }
 
 func NewRepository(db *gorm.DB) *Repository {

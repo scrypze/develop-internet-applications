@@ -37,6 +37,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		selectedStars.GET("", h.GetSelectedStars)
 		selectedStars.GET("/count", h.GetSelectedStarsCount)
 		selectedStars.PUT("/:id", h.UpdateSelectedStars)
+		selectedStars.PUT("/:id/form", h.FormSelectedStars)
 	}
 }
 
