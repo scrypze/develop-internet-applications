@@ -9,6 +9,7 @@ import (
 type Repository struct {
 	Star
 	SelectedStars
+	Users
 }
 
 type Star interface {
@@ -37,9 +38,17 @@ type SelectedStars interface {
 	ModerateSelectedStars(id int, moderatorID int, action string) error
 }
 
+type Users interface {
+	CreateUser(login, passwordHash string, isModerator bool) (model.Users, error)
+	GetUserByLogin(login string) (model.Users, error)
+	GetUserByID(id uint) (model.Users, error)
+	UpdateUser(id uint, fields map[string]interface{}) error
+}
+
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
 		Star:          NewStarPostgres(db),
 		SelectedStars: NewSelectedStarsPostgres(db),
+		Users:         NewUsersPostgres(db),
 	}
 }

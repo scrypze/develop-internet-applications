@@ -18,6 +18,14 @@ func NewHandler(service *service.Service) *Handler {
 func (h *Handler) RegisterHandler(router *gin.Engine) {
 	api := router.Group("/api")
 
+	auth := api.Group("/auth")
+	{
+		auth.POST("/register", h.Register)
+		auth.POST("/login", h.Login)
+		auth.POST("/logout", h.Logout)
+		auth.GET("/me", h.Me)
+	}
+
 	stars := api.Group("/stars")
 	{
 		stars.GET("", h.GetStars)

@@ -278,7 +278,7 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 	}
 
 	var payload struct {
-		Action      string `json:"action"` 
+		Action      string `json:"action"`
 		ModeratorID int    `json:"moderator_id"`
 	}
 	if err := ctx.BindJSON(&payload); err != nil {

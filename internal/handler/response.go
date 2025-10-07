@@ -5,7 +5,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-
 type errorResponse struct {
 	Message string `json:"message"`
 }
