@@ -34,6 +34,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		selectedStars.POST("/add-star/:id", h.AddStarToSelected)
 		selectedStars.POST("/delete-selected-stars/:id", h.DeleteSelectedStars)
 		selectedStars.GET("", h.GetSelectedStars)
+		selectedStars.GET("/count", h.GetSelectedStarsCount)
 	}
 }
 

@@ -128,7 +128,23 @@ func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
-// GetSelectedStars список с фильтрами по formed_at и статусу; исключает draft/is_delete; логины вместо вложенных пользователей
+func (h *Handler) GetSelectedStarsCount(ctx *gin.Context) {
+	creatorID := 1
+
+	draftID, err := h.service.GetCurrentDraftID(uint(creatorID))
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	count := h.service.GetSelectedStarsCount()
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"selected_stars_id": draftID,
+		"count":             count,
+	})
+}
+
 func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	dateFrom := ctx.Query("date_from")
 	dateTo := ctx.Query("date_to")
