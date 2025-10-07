@@ -11,3 +11,8 @@ type CalculateExoplanets struct {
 	SelectedStars SelectedStars `gorm:"foreignKey:SelectedStarsID"`
 	Star          Star          `gorm:"foreignKey:StarID"`
 }
+
+// r_in(AU) = sqrt( L / 1.107 )
+// r_out(AU) = sqrt( L / 0.356 )
+// HabitableZone = r_in - r_out a.u.
+// ProbableNumberOfPlanets = 2.5 × M^0.8 × 10^(0.3·[Fe/H])

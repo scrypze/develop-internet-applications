@@ -100,7 +100,7 @@ header img {
 }
 
 .main-content {
-    background-image: url('http://localhost:9000/exocalc/bg.png');
+    background-image: url('http://localhost:9000/stars/bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
