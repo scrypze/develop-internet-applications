@@ -32,6 +32,7 @@ type SelectedStars interface {
 	GetSelectedStarsFiltered(dateFrom, dateTo, status string) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
 	FormSelectedStars(id int) error
+	RemoveStarFromSelected(starID int) error
 }
 
 func NewService(repo *repository.Repository, minio *pkg.MinioClient) *Service {

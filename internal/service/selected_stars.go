@@ -63,3 +63,7 @@ func (s *SelectedStarsService) FormSelectedStars(id int) error {
 	}
 	return s.repo.FormSelectedStars(id)
 }
+
+func (s *SelectedStarsService) RemoveStarFromSelected(starID int) error {
+	return s.repo.RemoveStarFromSelected(starID)
+}

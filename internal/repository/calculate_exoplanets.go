@@ -78,3 +78,17 @@ func (r *SelectedStarsPostgres) AddStarIntoSelectedStars(starID int) error {
 		}).Create(&rec).Error
 	})
 }
+
+func (r *SelectedStarsPostgres) RemoveStarFromSelected(starID int) error {
+	creatorID := 1
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		var draft model.SelectedStars
+		if err := tx.Where("creator_id = ? AND status = ?", creatorID, "draft").Order("id DESC").Limit(1).Find(&draft).Error; err != nil {
+			return err
+		}
+		if draft.ID == 0 {
+			return nil
+		}
+		return tx.Where("selected_stars_id = ? AND star_id = ?", draft.ID, starID).Delete(&model.CalculateExoplanets{}).Error
+	})
+}

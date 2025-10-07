@@ -190,6 +190,21 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	})
 }
 
+// RemoveStarFromSelected удаляет звезду из текущей заявки-драфта
+func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	starID, err := strconv.Atoi(idStr)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+	if err := h.service.RemoveStarFromSelected(starID); err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+	ctx.Status(http.StatusOK)
+}
+
 func (h *Handler) UpdateSelectedStars(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)

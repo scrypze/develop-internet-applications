@@ -32,6 +32,7 @@ type SelectedStars interface {
 	GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
 	FormSelectedStars(id int) error
+	RemoveStarFromSelected(starID int) error
 }
 
 func NewRepository(db *gorm.DB) *Repository {
