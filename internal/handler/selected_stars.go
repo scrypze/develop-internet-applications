@@ -127,3 +127,49 @@ func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 
 	ctx.Status(http.StatusOK)
 }
+
+// GetSelectedStars список с фильтрами по formed_at и статусу; исключает draft/is_delete; логины вместо вложенных пользователей
+func (h *Handler) GetSelectedStars(ctx *gin.Context) {
+	dateFrom := ctx.Query("date_from")
+	dateTo := ctx.Query("date_to")
+	status := ctx.Query("status")
+
+	lists, err := h.service.GetSelectedStarsFiltered(dateFrom, dateTo, status)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	type Row struct {
+		ID         int     `json:"id"`
+		Status     string  `json:"status"`
+		FormedAt   string  `json:"formed_at"`
+		Creator    string  `json:"creator_login"`
+		Moderator  *string `json:"moderator_login"`
+		Scientist  string  `json:"scientist"`
+		ItemsCount int     `json:"items_count"`
+	}
+
+	resp := make([]Row, 0, len(lists))
+	for _, l := range lists {
+		var modLogin *string
+		if l.Moderator.Login != "" {
+			ml := l.Moderator.Login
+			modLogin = &ml
+		}
+		row := Row{
+			ID:         l.ID,
+			Status:     l.Status,
+			FormedAt:   l.FormedAt.Format("2006-01-02"),
+			Creator:    l.Creator.Login,
+			Moderator:  modLogin,
+			Scientist:  l.Scientist,
+			ItemsCount: len(l.SelectedStarsItems),
+		}
+		resp = append(resp, row)
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"selected-stars": resp,
+	})
+}

@@ -47,6 +47,29 @@ func (r *SelectedStarsPostgres) GetSelectedStarsByID(id int) (model.SelectedStar
 	return list, nil
 }
 
+func (r *SelectedStarsPostgres) GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error) {
+	var lists []model.SelectedStars
+
+	q := r.db.Preload("Creator").Preload("Moderator").Preload("SelectedStarsItems").Model(&model.SelectedStars{})
+
+	q = q.Where("status NOT IN (?)", []string{"draft", "is_delete"})
+
+	if status != "" {
+		q = q.Where("status = ?", status)
+	}
+	if dateFrom != "" {
+		q = q.Where("formed_at >= ?", dateFrom)
+	}
+	if dateTo != "" {
+		q = q.Where("formed_at <= ?", dateTo)
+	}
+
+	if err := q.Order("id DESC").Find(&lists).Error; err != nil {
+		return nil, err
+	}
+	return lists, nil
+}
+
 func (r *SelectedStarsPostgres) GetSelectedStarsCount() int64 {
 	var selectedStarsID int
 	var count int64

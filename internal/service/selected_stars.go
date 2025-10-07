@@ -40,3 +40,7 @@ func (s *SelectedStarsService) AddStarIntoSelectedStars(starID int) error {
 func (s *SelectedStarsService) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error) {
 	return s.repo.GetCalculateExoplanetsBySelectedStarsID(selectedStarsID)
 }
+
+func (s *SelectedStarsService) GetSelectedStarsFiltered(dateFrom, dateTo, status string) ([]model.SelectedStars, error) {
+	return s.repo.GetSelectedStarsFiltered(dateFrom, dateTo, status)
+}

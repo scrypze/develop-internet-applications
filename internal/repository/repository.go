@@ -3,8 +3,6 @@ package repository
 import (
 	"develop-internet-applications/internal/model"
 
-	// "gitlab.c2g.pw/back/alertjournal/db"
-	// "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -31,6 +29,7 @@ type SelectedStars interface {
 	GetCurrentDraftID(creatorID uint) (int, error)
 	AddStarIntoSelectedStars(starID int) error
 	GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error)
+	GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error)
 }
 
 func NewRepository(db *gorm.DB) *Repository {

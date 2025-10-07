@@ -29,6 +29,7 @@ type SelectedStars interface {
 	GetCurrentDraftID(creatorID uint) (int, error)
 	AddStarIntoSelectedStars(starID int) error
 	GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error)
+	GetSelectedStarsFiltered(dateFrom, dateTo, status string) ([]model.SelectedStars, error)
 }
 
 func NewService(repo *repository.Repository, minio *pkg.MinioClient) *Service {
