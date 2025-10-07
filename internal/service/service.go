@@ -34,6 +34,7 @@ type SelectedStars interface {
 	FormSelectedStars(id int) error
 	RemoveStarFromSelected(starID int) error
 	CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error)
+	ModerateSelectedStars(id int, moderatorID int, action string) error
 }
 
 func NewService(repo *repository.Repository, minio *pkg.MinioClient) *Service {

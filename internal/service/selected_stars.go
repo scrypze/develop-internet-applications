@@ -71,3 +71,10 @@ func (s *SelectedStarsService) RemoveStarFromSelected(starID int) error {
 func (s *SelectedStarsService) CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error) {
 	return s.repo.CreateDraftSelectedStars(creatorID)
 }
+
+func (s *SelectedStarsService) ModerateSelectedStars(id int, moderatorID int, action string) error {
+	if _, err := s.repo.GetSelectedStarsByID(id); err != nil {
+		return err
+	}
+	return s.repo.ModerateSelectedStars(id, moderatorID, action)
+}

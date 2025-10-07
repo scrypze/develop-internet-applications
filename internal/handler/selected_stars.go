@@ -7,6 +7,8 @@ import (
 
 	"develop-internet-applications/internal/model"
 
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -190,7 +192,6 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	})
 }
 
-// RemoveStarFromSelected удаляет звезду из текущей заявки-драфта
 func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	starID, err := strconv.Atoi(idStr)
@@ -266,4 +267,96 @@ func (h *Handler) FormSelectedStars(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"selected-stars": updated})
+}
+
+func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	var payload struct {
+		Action      string `json:"action"` 
+		ModeratorID int    `json:"moderator_id"`
+	}
+	if err := ctx.BindJSON(&payload); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	if payload.ModeratorID == 0 || (payload.Action != "complete" && payload.Action != "decline") {
+		h.errorHandler(ctx, http.StatusBadRequest, fmt.Errorf("invalid payload"))
+		return
+	}
+
+	if err := h.service.ModerateSelectedStars(id, payload.ModeratorID, payload.Action); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	updated, err := h.service.GetSelectedStarsByID(id)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	calcByStarID, err := h.service.GetCalculateExoplanetsBySelectedStarsID(id)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	type StarWithCalc struct {
+		model.Star
+		ProbableNumberOfPlanets float32 `json:"probable_number_of_planets"`
+		HabitableZone           string  `json:"habitable_zone"`
+	}
+
+	type SelectedStarsBase struct {
+		ID          int         `json:"ID"`
+		Status      string      `json:"Status"`
+		CreatedAt   time.Time   `json:"CreatedAt"`
+		FormedAt    time.Time   `json:"FormedAt"`
+		CompletedAt time.Time   `json:"CompletedAt"`
+		CreatorID   int         `json:"CreatorID"`
+		ModeratorID *int        `json:"ModeratorID"`
+		Date        time.Time   `json:"Date"`
+		Scientist   string      `json:"Scientist"`
+		Creator     model.Users `json:"Creator"`
+		Moderator   model.Users `json:"Moderator"`
+	}
+
+	type SelectedResponse struct {
+		SelectedStarsBase
+		SelectedStarsItems []StarWithCalc `json:"selected-stars-items"`
+	}
+
+	items := make([]StarWithCalc, 0, len(updated.SelectedStarsItems))
+	for _, s := range updated.SelectedStarsItems {
+		calc := calcByStarID[s.ID]
+		items = append(items, StarWithCalc{
+			Star:                    s,
+			ProbableNumberOfPlanets: calc.ProbableNumberOfPlanets,
+			HabitableZone:           calc.HabitableZone,
+		})
+	}
+
+	base := SelectedStarsBase{
+		ID:          updated.ID,
+		Status:      updated.Status,
+		CreatedAt:   updated.CreatedAt,
+		FormedAt:    updated.FormedAt,
+		CompletedAt: updated.CompletedAt,
+		CreatorID:   updated.CreatorID,
+		ModeratorID: updated.ModeratorID,
+		Date:        updated.Date,
+		Scientist:   updated.Scientist,
+		Creator:     updated.Creator,
+		Moderator:   updated.Moderator,
+	}
+
+	resp := SelectedResponse{SelectedStarsBase: base, SelectedStarsItems: items}
+	ctx.JSON(http.StatusOK, gin.H{"selected-stars": resp})
 }
