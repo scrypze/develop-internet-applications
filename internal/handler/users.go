@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Auth handlers (минимальная реализация; хранение user_id в cookie)
 func (h *Handler) Register(ctx *gin.Context) {
 	var p struct{ Login, Password string }
 	if err := ctx.BindJSON(&p); err != nil {
@@ -19,7 +18,6 @@ func (h *Handler) Register(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, errRequired())
 		return
 	}
-	// простейший хеш (для демо) — в реале использовать bcrypt/argon2
 	user, err := h.service.CreateUser(p.Login, p.Password, false)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
@@ -62,7 +60,6 @@ func (h *Handler) Me(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"user": u})
 }
 
-// helpers
 func fmtID(id uint) string { return fmt.Sprintf("%d", id) }
 func readUserID(ctx *gin.Context) (uint, bool) {
 	v, err := ctx.Cookie("user_id")

@@ -20,5 +20,8 @@ func SyncSequences(db *gorm.DB) error {
 	if err := db.Exec("SELECT setval(pg_get_serial_sequence('selected_stars','id'), COALESCE((SELECT MAX(id) FROM selected_stars), 0))").Error; err != nil {
 		return err
 	}
+	if err := db.Exec("SELECT setval(pg_get_serial_sequence('users','id'), COALESCE((SELECT MAX(id) FROM users), 0))").Error; err != nil {
+		return err
+	}
 	return nil
 }
