@@ -3,9 +3,19 @@ package repository
 import (
 	"develop-internet-applications/internal/model"
 	"fmt"
+
+	"gorm.io/gorm"
 )
 
-func (r *Repository) GetSelectedStars() ([]model.SelectedStars, error) {
+type SelectedStarsPostgres struct {
+	db *gorm.DB
+}
+
+func NewSelectedStarsPostgres(db *gorm.DB) *SelectedStarsPostgres {
+	return &SelectedStarsPostgres{db: db}
+}
+
+func (r *SelectedStarsPostgres) GetSelectedStars() ([]model.SelectedStars, error) {
 	var lists []model.SelectedStars
 
 	err := r.db.Preload("SelectedStarsItems").
@@ -23,7 +33,7 @@ func (r *Repository) GetSelectedStars() ([]model.SelectedStars, error) {
 	return lists, nil
 }
 
-func (r *Repository) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
+func (r *SelectedStarsPostgres) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
 	var list model.SelectedStars
 
 	err := r.db.Preload("SelectedStarsItems").
@@ -37,7 +47,7 @@ func (r *Repository) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
 	return list, nil
 }
 
-func (r *Repository) GetSelectedStarsCount() int64 {
+func (r *SelectedStarsPostgres) GetSelectedStarsCount() int64 {
 	var selectedStarsID int
 	var count int64
 	creatorID := 1
@@ -66,7 +76,7 @@ func (r *Repository) GetSelectedStarsCount() int64 {
 	return count
 }
 
-func (r *Repository) DeleteSelectedStars(selectedStarsID int) error {
+func (r *SelectedStarsPostgres) DeleteSelectedStars(selectedStarsID int) error {
 	err := r.db.Model(&model.SelectedStars{}).
 		Where("id = ?", selectedStarsID).
 		Update("status", "is_delete").Error
@@ -78,7 +88,7 @@ func (r *Repository) DeleteSelectedStars(selectedStarsID int) error {
 	return nil
 }
 
-func (r *Repository) GetCurrentDraftID(creatorID uint) (int, error) {
+func (r *SelectedStarsPostgres) GetCurrentDraftID(creatorID uint) (int, error) {
 	var id int
 
 	err := r.db.Model(&model.SelectedStars{}).

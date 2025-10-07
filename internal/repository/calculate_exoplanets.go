@@ -8,7 +8,15 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func (r *Repository) GetCalculateExoplanets() (model.CalculateExoplanets, error) {
+type CalculateExoplanetsPostgres struct {
+	db *gorm.DB
+}
+
+func NewCalculateExoplanetsPostgres(db *gorm.DB) *CalculateExoplanetsPostgres {
+	return &CalculateExoplanetsPostgres{db: db}
+}
+
+func (r *SelectedStarsPostgres) GetCalculateExoplanets() (model.CalculateExoplanets, error) {
 	var list model.CalculateExoplanets
 
 	err := r.db.Find(&list).Error
@@ -19,7 +27,7 @@ func (r *Repository) GetCalculateExoplanets() (model.CalculateExoplanets, error)
 	return list, nil
 }
 
-func (r *Repository) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error) {
+func (r *SelectedStarsPostgres) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error) {
 	var rows []model.CalculateExoplanets
 	if err := r.db.Where("selected_stars_id = ?", selectedStarsID).Find(&rows).Error; err != nil {
 		return nil, err
@@ -31,7 +39,7 @@ func (r *Repository) GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int
 	return result, nil
 }
 
-func (r *Repository) AddStarIntoSelectedStars(starID int) error {
+func (r *SelectedStarsPostgres) AddStarIntoSelectedStars(starID int) error {
 	creatorID := 1
 
 	return r.db.Transaction(func(tx *gorm.DB) error {

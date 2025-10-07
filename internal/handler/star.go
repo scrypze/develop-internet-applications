@@ -17,9 +17,9 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 
 	searchedStar := ctx.Query("searchedStar")
 	if searchedStar == "" {
-		stars, err = h.Repository.GetStars()
+		stars, err = h.service.GetStars()
 	} else {
-		stars, err = h.Repository.GetStarsByTitle(searchedStar)
+		stars, err = h.service.GetStarsByTitle(searchedStar)
 	}
 
 	if err != nil {
@@ -31,12 +31,12 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 	}
 
 	creatorID := 1
-	selectedStarsID, err := h.Repository.GetCurrentDraftID(uint(creatorID))
+	selectedStarsID, err := h.service.GetCurrentDraftID(uint(creatorID))
 
 	ctx.HTML(http.StatusOK, "index.html", gin.H{
 		"time":               time.Now().Format("15:04:05"),
 		"stars":              stars,
-		"selectedStarsCount": h.Repository.GetSelectedStarsCount(),
+		"selectedStarsCount": h.service.GetSelectedStarsCount(),
 		"searchedStar":       searchedStar,
 		"selectedStarsID":    selectedStarsID,
 	})
@@ -50,7 +50,7 @@ func (h *Handler) GetStarByID(ctx *gin.Context) {
 		logrus.Error(err)
 	}
 
-	star, err := h.Repository.GetStarByID(id)
+	star, err := h.service.GetStarByID(id)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{

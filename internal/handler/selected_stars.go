@@ -16,13 +16,13 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		logrus.Error(err)
 	}
 
-	selectedStars, err := h.Repository.GetSelectedStarsByID(id)
+	selectedStars, err := h.service.GetSelectedStarsByID(id)
 
 	if err != nil {
 		logrus.Error(err)
 	}
 
-	calcByStarID, err := h.Repository.GetCalculateExoplanetsBySelectedStarsID(id)
+	calcByStarID, err := h.service.GetCalculateExoplanetsBySelectedStarsID(id)
 
 	if err != nil {
 		logrus.Error(err)
@@ -45,7 +45,7 @@ func (h *Handler) AddStarToSelected(ctx *gin.Context) {
 		return
 	}
 
-	err = h.Repository.AddStarIntoSelectedStars(id)
+	err = h.service.AddStarIntoSelectedStars(id)
 
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
@@ -64,7 +64,7 @@ func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 		return
 	}
 
-	err = h.Repository.DeleteSelectedStars(id)
+	err = h.service.DeleteSelectedStars(id)
 
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
