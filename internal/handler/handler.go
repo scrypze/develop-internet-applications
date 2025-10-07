@@ -16,16 +16,22 @@ func NewHandler(service *service.Service) *Handler {
 }
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
-	router.GET("/stars", h.GetStars)
-	router.GET("/star/:id", h.GetStarByID)
-	router.GET("/selected-stars/:id", h.GetSelectedStarsByID)
-	router.POST("/selected-stars/add-star/:id", h.AddStarToSelected)
-	router.POST("/selected-stars/delete-selected-stars/:id", h.DeleteSelectedStars)
-}
+	api := router.Group("/api")
 
-func (h *Handler) RegisterStatic(router *gin.Engine) {
-	router.LoadHTMLGlob("templates/*")
-	router.Static("/static", "./resources")
+	stars := api.Group("/stars")
+	{
+		stars.GET("", h.GetStars)
+		stars.GET("/:id", h.GetStarByID)
+		stars.POST("", h.CreateStar)
+		stars.PUT("/:id", h.UpdateStar)
+	}
+
+	selectedStars := api.Group("/selected-stars")
+	{
+		selectedStars.GET("/:id", h.GetSelectedStarsByID)
+		selectedStars.POST("/add-star/:id", h.AddStarToSelected)
+		selectedStars.POST("/delete-selected-stars/:id", h.DeleteSelectedStars)
+	}
 }
 
 func (h *Handler) errorHandler(ctx *gin.Context, errorStatusCode int, err error) {
