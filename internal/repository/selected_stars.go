@@ -47,8 +47,6 @@ func (r *SelectedStarsPostgres) GetSelectedStarsByID(id int) (model.SelectedStar
 	return list, nil
 }
 
-
-
 func (r *SelectedStarsPostgres) GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error) {
 	var lists []model.SelectedStars
 
@@ -151,4 +149,16 @@ func (r *SelectedStarsPostgres) FormSelectedStars(id int) error {
 		"status":    "formed",
 		"formed_at": time.Now(),
 	}).Error
+}
+
+func (r *SelectedStarsPostgres) CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error) {
+	draft := model.SelectedStars{
+		Status:    "draft",
+		CreatorID: creatorID,
+		Date:      time.Now(),
+	}
+	if err := r.db.Create(&draft).Error; err != nil {
+		return model.SelectedStars{}, err
+	}
+	return draft, nil
 }

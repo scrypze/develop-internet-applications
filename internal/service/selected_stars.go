@@ -67,3 +67,7 @@ func (s *SelectedStarsService) FormSelectedStars(id int) error {
 func (s *SelectedStarsService) RemoveStarFromSelected(starID int) error {
 	return s.repo.RemoveStarFromSelected(starID)
 }
+
+func (s *SelectedStarsService) CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error) {
+	return s.repo.CreateDraftSelectedStars(creatorID)
+}

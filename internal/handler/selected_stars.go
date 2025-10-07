@@ -205,6 +205,16 @@ func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
+func (h *Handler) CreateDraftSelectedStars(ctx *gin.Context) {
+	creatorID := 1
+	draft, err := h.service.CreateDraftSelectedStars(creatorID)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+	ctx.JSON(http.StatusCreated, gin.H{"selected-stars": draft})
+}
+
 func (h *Handler) UpdateSelectedStars(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
