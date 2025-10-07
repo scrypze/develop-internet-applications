@@ -26,12 +26,13 @@ func (s *StarService) GetStars() ([]model.Star, error) {
 
 func (s *StarService) GetStarByID(id int) (*model.Star, error) {
 	star, err := s.repo.GetStarByID(id)
-
-	if star.ID == 0 {
+	if err != nil {
+		return &model.Star{}, err
+	}
+	if star == nil || star.ID == 0 {
 		return &model.Star{}, fmt.Errorf("star not found")
 	}
-
-	return star, err
+	return star, nil
 }
 
 func (s *StarService) GetStarsByTitle(starTitle string) ([]model.Star, error) {
@@ -69,7 +70,7 @@ func (s *StarService) DeleteStar(id int) error {
 	return s.repo.DeleteStar(id)
 }
 
-func (s *StarService) UploadMaterialImage(id int, file []byte, filename string) error {
+func (s *StarService) UploadStarImage(id int, file []byte, filename string) error {
 	star, err := s.repo.GetStarByID(id)
 	if star.ID == 0 {
 		return fmt.Errorf("star not found")

@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type Handler struct{
+type Handler struct {
 	service *service.Service
 }
 
@@ -24,6 +24,8 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		stars.GET("/:id", h.GetStarByID)
 		stars.POST("", h.CreateStar)
 		stars.PUT("/:id", h.UpdateStar)
+		stars.DELETE("/:id", h.DeleteStar)
+		stars.POST("/:id/image", h.UploadStarImage)
 	}
 
 	selectedStars := api.Group("/selected-stars")

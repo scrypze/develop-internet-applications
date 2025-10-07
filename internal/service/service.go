@@ -18,7 +18,7 @@ type Star interface {
 	CreateStar(star *model.Star) (model.Star, error)
 	UpdateStar(id int, star *model.Star) error
 	DeleteStar(id int) error
-	UploadMaterialImage(id int, file []byte, filename string) error
+	UploadStarImage(id int, file []byte, filename string) error
 }
 
 type SelectedStars interface {

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"io"
 	"net/http"
 	"strconv"
 
@@ -116,4 +117,32 @@ func (h *Handler) DeleteStar(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+func (h *Handler) UploadStarImage(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "Invalid star ID")
+		return
+	}
+
+	file, header, err := c.Request.FormFile("image")
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, "No image file provided")
+		return
+	}
+	defer file.Close()
+
+	fileBytes, err := io.ReadAll(file)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, "Failed to read file")
+		return
+	}
+
+	if err := h.service.UploadStarImage(id, fileBytes, header.Filename); err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Image uploaded successfully"})
 }
