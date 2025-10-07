@@ -126,3 +126,17 @@ func (r *SelectedStarsPostgres) GetCurrentDraftID(creatorID uint) (int, error) {
 
 	return id, nil
 }
+
+func (r *SelectedStarsPostgres) UpdateSelectedStars(id int, date string, scientist string) error {
+	updates := map[string]interface{}{}
+	if date != "" {
+		updates["date"] = date
+	}
+	if scientist != "" {
+		updates["scientist"] = scientist
+	}
+	if len(updates) == 0 {
+		return nil
+	}
+	return r.db.Model(&model.SelectedStars{}).Where("id = ?", id).Updates(updates).Error
+}

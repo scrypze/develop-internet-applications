@@ -44,3 +44,7 @@ func (s *SelectedStarsService) GetCalculateExoplanetsBySelectedStarsID(selectedS
 func (s *SelectedStarsService) GetSelectedStarsFiltered(dateFrom, dateTo, status string) ([]model.SelectedStars, error) {
 	return s.repo.GetSelectedStarsFiltered(dateFrom, dateTo, status)
 }
+
+func (s *SelectedStarsService) UpdateSelectedStars(id int, date string, scientist string) error {
+	return s.repo.UpdateSelectedStars(id, date, scientist)
+}

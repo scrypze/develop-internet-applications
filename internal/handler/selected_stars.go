@@ -189,3 +189,34 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 		"selected-stars": resp,
 	})
 }
+
+func (h *Handler) UpdateSelectedStars(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	var payload struct {
+		Date      string `json:"date"`
+		Scientist string `json:"scientist"`
+	}
+	if err := ctx.BindJSON(&payload); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.service.UpdateSelectedStars(id, payload.Date, payload.Scientist); err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	updated, err := h.service.GetSelectedStarsByID(id)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"selected-stars": updated})
+}
