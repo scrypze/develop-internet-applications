@@ -18,7 +18,7 @@ func NewSelectedStarsPostgres(db *gorm.DB) *SelectedStarsPostgres {
 func (r *SelectedStarsPostgres) GetSelectedStars() ([]model.SelectedStars, error) {
 	var lists []model.SelectedStars
 
-	err := r.db.Preload("SelectedStarsItems").
+	err := r.db.Preload("Creator").Preload("Moderator").Preload("SelectedStarsItems").
 		Where("status = ?", "draft").
 		Find(&lists).Error
 
@@ -36,7 +36,7 @@ func (r *SelectedStarsPostgres) GetSelectedStars() ([]model.SelectedStars, error
 func (r *SelectedStarsPostgres) GetSelectedStarsByID(id int) (model.SelectedStars, error) {
 	var list model.SelectedStars
 
-	err := r.db.Preload("SelectedStarsItems").
+	err := r.db.Preload("Creator").Preload("Moderator").Preload("SelectedStarsItems").
 		Where("status = ?", "draft").
 		First(&list, id).Error
 
