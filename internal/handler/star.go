@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"time"
 
 	"develop-internet-applications/internal/model"
 
@@ -32,9 +31,12 @@ func (h *Handler) GetStars(ctx *gin.Context) {
 
 	creatorID := 1
 	selectedStarsID, err := h.service.GetCurrentDraftID(uint(creatorID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
-	ctx.HTML(http.StatusOK, "index.html", gin.H{
-		"time":               time.Now().Format("15:04:05"),
+	ctx.JSON(http.StatusOK, gin.H{
 		"stars":              stars,
 		"selectedStarsCount": h.service.GetSelectedStarsCount(),
 		"searchedStar":       searchedStar,
@@ -60,11 +62,7 @@ func (h *Handler) GetStarByID(ctx *gin.Context) {
 		return
 	}
 
-	from := ctx.Query("from")
-	selectedStarsID := ctx.Query("selectedStarsID")
-	ctx.HTML(http.StatusOK, "star.html", gin.H{
-		"star":            star,
-		"from":            from,
-		"selectedStarsID": selectedStarsID,
+	ctx.JSON(http.StatusOK, gin.H{
+		"star": star,
 	})
 }

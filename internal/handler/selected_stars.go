@@ -17,18 +17,18 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	}
 
 	selectedStars, err := h.service.GetSelectedStarsByID(id)
-
 	if err != nil {
-		logrus.Error(err)
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
 	}
 
 	calcByStarID, err := h.service.GetCalculateExoplanetsBySelectedStarsID(id)
-
 	if err != nil {
-		logrus.Error(err)
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
 	}
 
-	ctx.HTML(http.StatusOK, "selected-stars.html", gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"selected":        selectedStars,
 		"selectedStars":   selectedStars.SelectedStarsItems,
 		"selectedStarsID": id,
@@ -52,7 +52,7 @@ func (h *Handler) AddStarToSelected(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Redirect(http.StatusSeeOther, "/stars")
+	ctx.Status(http.StatusCreated)
 }
 
 func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
@@ -71,5 +71,5 @@ func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Redirect(http.StatusSeeOther, "/stars")
+	ctx.Status(http.StatusOK)
 }
