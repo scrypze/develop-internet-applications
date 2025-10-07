@@ -25,43 +25,7 @@ type Application struct {
 	Handler *handler.Handler
 }
 
-func NewApp(c *config.Config, r *gin.Engine, h *handler.Handler) *Application {
-	return &Application{
-		Config:  c,
-		Router:  r,
-		Handler: h,
-	}
-}
-
-func (a *Application) RunApp() {
-	logrus.Info("Server start up")
-
-	a.Handler.RegisterHandler(a.Router)
-	a.Handler.RegisterStatic(a.Router)
-
-	serverAddress := fmt.Sprintf("%s:%d", a.Config.ServiceHost, a.Config.ServicePort)
-	srv := &http.Server{Addr: serverAddress, Handler: a.Router}
-
-	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logrus.Fatalf("listen: %v", err)
-		}
-	}()
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-	logrus.Info("Server shutting down")
-
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	if err := srv.Shutdown(ctx); err != nil {
-		logrus.Fatalf("Server forced to shutdown: %v", err)
-	}
-	logrus.Info("Server down")
-}
-
-func RunApp() {
+func NewApp() *Application {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
 	conf, err := config.NewConfig()
@@ -75,20 +39,48 @@ func RunApp() {
 		logrus.Fatal(err.Error())
 	}
 
+	config.MigrateDB()
+
 	minioClient, err := pkg.NewMinioClient()
-    if err != nil {
-        logrus.Fatalf("failed to create minio client: %v", err)
-    }
+	if err != nil {
+		logrus.Fatalf("failed to create minio client: %v", err)
+	}
 
 	repository := repository.NewRepository(db)
 	service := service.NewService(repository, minioClient)
 	handler := handler.NewHandler(service)
 	router := gin.Default()
 
-	app := &Application{
+	return &Application{
 		Config:  conf,
 		Router:  router,
 		Handler: handler,
 	}
-	app.RunApp()
+}
+
+func (a *Application) RunApp() {
+
+	a.Handler.RegisterHandler(a.Router)
+	serverAddress := fmt.Sprintf("%s:%d", a.Config.ServiceHost, a.Config.ServicePort)
+	server := &http.Server{
+		Addr:    serverAddress,
+		Handler: a.Router,
+	}
+
+	go func() {
+		logrus.Println("Service started")
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logrus.Fatalf("Server error: %v", err)
+		}
+	}()
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+	logrus.Info("Shutting down server")
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
+		logrus.Errorf("Server shutdown error: %v", err)
+	}
+	logrus.Info("Server down")
 }
