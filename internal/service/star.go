@@ -48,7 +48,7 @@ func (s *StarService) UpdateStar(id int, payload *model.Star) error {
 	if existing.ID == 0 {
 		return fmt.Errorf("star not found")
 	}
-	// Не позволяем менять первичный ключ
+
 	payload.ID = 0
 	return s.repo.UpdateStar(id, payload)
 }
