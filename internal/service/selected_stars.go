@@ -68,6 +68,10 @@ func (s *SelectedStarsService) RemoveStarFromSelected(starID int) error {
 	return s.repo.RemoveStarFromSelected(starID)
 }
 
+func (s *SelectedStarsService) UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error {
+	return s.repo.UpdateCalculateExoplanetsComment(selectedStarsID, starID, comment)
+}
+
 func (s *SelectedStarsService) CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error) {
 	return s.repo.CreateDraftSelectedStars(creatorID)
 }

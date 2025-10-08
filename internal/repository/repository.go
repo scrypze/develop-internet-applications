@@ -36,6 +36,7 @@ type SelectedStars interface {
 	RemoveStarFromSelected(starID int) error
 	CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error)
 	ModerateSelectedStars(id int, moderatorID int, action string) error
+	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
 }
 
 type Users interface {

@@ -92,3 +92,9 @@ func (r *SelectedStarsPostgres) RemoveStarFromSelected(starID int) error {
 		return tx.Where("selected_stars_id = ? AND star_id = ?", draft.ID, starID).Delete(&model.CalculateExoplanets{}).Error
 	})
 }
+
+func (r *SelectedStarsPostgres) UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error {
+	return r.db.Model(&model.CalculateExoplanets{}).
+		Where("selected_stars_id = ? AND star_id = ?", selectedStarsID, starID).
+		Update("comment", comment).Error
+}
