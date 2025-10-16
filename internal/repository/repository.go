@@ -9,6 +9,7 @@ import (
 type Repository struct {
 	Star
 	SelectedStars
+	CalculateExoplanets
 	Users
 }
 
@@ -36,6 +37,9 @@ type SelectedStars interface {
 	RemoveStarFromSelected(starID int) error
 	CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error)
 	ModerateSelectedStars(id int, moderatorID int, action string) error
+}
+
+type CalculateExoplanets interface {
 	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
 }
 
@@ -50,6 +54,7 @@ func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
 		Star:          NewStarPostgres(db),
 		SelectedStars: NewSelectedStarsPostgres(db),
+		CalculateExoplanets: NewCalculateExoplanetsPostgres(db),
 		Users:         NewUsersPostgres(db),
 	}
 }

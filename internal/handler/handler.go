@@ -43,13 +43,17 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		selectedStars.DELETE("/:id", h.DeleteSelectedStars)
 		selectedStars.POST("/add-star/:id", h.AddStarToSelected)
 		selectedStars.DELETE("/remove-star/:id", h.RemoveStarFromSelected)
-		selectedStars.PUT("/updateStarComment", h.UpdateCalculateExoplanetsComment)
 		selectedStars.POST("/delete-selected-stars/:id", h.DeleteSelectedStars)
 		selectedStars.GET("", h.GetSelectedStars)
 		selectedStars.GET("/count", h.GetSelectedStarsCount)
 		selectedStars.PUT("/:id", h.UpdateSelectedStars)
 		selectedStars.PUT("/:id/form", h.FormSelectedStars)
 		selectedStars.PUT("/:id/moderate", h.ModerateSelectedStars)
+	}
+
+	calculateExoplanets := api.Group("/calculate-exoplanets")
+	{
+		calculateExoplanets.PUT("/updateStarComment", h.UpdateCalculateExoplanetsComment)
 	}
 }
 

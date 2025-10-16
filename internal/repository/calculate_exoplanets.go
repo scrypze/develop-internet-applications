@@ -93,7 +93,7 @@ func (r *SelectedStarsPostgres) RemoveStarFromSelected(starID int) error {
 	})
 }
 
-func (r *SelectedStarsPostgres) UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error {
+func (r *CalculateExoplanetsPostgres) UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error {
 	return r.db.Model(&model.CalculateExoplanets{}).
 		Where("selected_stars_id = ? AND star_id = ?", selectedStarsID, starID).
 		Update("comment", comment).Error

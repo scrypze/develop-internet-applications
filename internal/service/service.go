@@ -9,6 +9,7 @@ import (
 type Service struct {
 	Star
 	SelectedStars
+	CalculateExoplanets
 	Users
 }
 
@@ -36,9 +37,12 @@ type SelectedStars interface {
 	RemoveStarFromSelected(starID int) error
 	CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error)
 	ModerateSelectedStars(id int, moderatorID int, action string) error
-	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
+	// UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
 }
 
+type CalculateExoplanets interface {
+	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
+}
 type Users interface {
 	CreateUser(login, passwordHash string, isModerator bool) (model.Users, error)
 	GetUserByLogin(login string) (model.Users, error)
@@ -48,8 +52,9 @@ type Users interface {
 
 func NewService(repo *repository.Repository, minio *pkg.MinioClient) *Service {
 	return &Service{
-		Star:          NewStarService(repo.Star, minio),
-		SelectedStars: NewSelectedStarsService(repo.SelectedStars),
-		Users:         NewUsersService(repo.Users),
+		Star:                NewStarService(repo.Star, minio),
+		SelectedStars:       NewSelectedStarsService(repo.SelectedStars),
+		CalculateExoplanets: NewCalculateExoplanetsService(repo.CalculateExoplanets),
+		Users:               NewUsersService(repo.Users),
 	}
 }
