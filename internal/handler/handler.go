@@ -42,7 +42,6 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		selectedStars.GET("/:id", h.GetSelectedStarsByID)
 		selectedStars.DELETE("/:id", h.DeleteSelectedStars)
 		selectedStars.POST("/add-star/:id", h.AddStarToSelected)
-		selectedStars.DELETE("/remove-star/:id", h.RemoveStarFromSelected)
 		selectedStars.POST("/delete-selected-stars/:id", h.DeleteSelectedStars)
 		selectedStars.GET("", h.GetSelectedStars)
 		selectedStars.GET("/count", h.GetSelectedStarsCount)
@@ -54,6 +53,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	calculateExoplanets := api.Group("/calculate-exoplanets")
 	{
 		calculateExoplanets.PUT("/updateStarComment", h.UpdateCalculateExoplanetsComment)
+		calculateExoplanets.DELETE("/remove-star/:id", h.RemoveStarFromSelected)
 	}
 }
 
