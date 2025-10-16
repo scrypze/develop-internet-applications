@@ -40,17 +40,17 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	}
 
 	type SelectedStarsBase struct {
-		ID          int         `json:"ID"`
-		Status      string      `json:"Status"`
-		CreatedAt   time.Time   `json:"CreatedAt"`
-		FormedAt    time.Time   `json:"FormedAt"`
-		CompletedAt time.Time   `json:"CompletedAt"`
-		CreatorID   int         `json:"CreatorID"`
-		ModeratorID *int        `json:"ModeratorID"`
-		Date        time.Time   `json:"Date"`
-		Scientist   string      `json:"Scientist"`
-		Creator     model.Users `json:"Creator"`
-		Moderator   model.Users `json:"Moderator"`
+		ID             int       `json:"ID"`
+		Status         string    `json:"Status"`
+		CreatedAt      time.Time `json:"CreatedAt"`
+		FormedAt       time.Time `json:"FormedAt"`
+		CompletedAt    time.Time `json:"CompletedAt"`
+		CreatorID      int       `json:"CreatorID"`
+		ModeratorID    *int      `json:"ModeratorID"`
+		Date           time.Time `json:"Date"`
+		Scientist      string    `json:"Scientist"`
+		CreatorLogin   string    `json:"creator_login"`
+		ModeratorLogin *string   `json:"moderator_login"`
 	}
 
 	type SelectedResponse struct {
@@ -68,18 +68,23 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		})
 	}
 
+	var modLogin *string
+	if selectedStars.Moderator.Login != "" {
+		ml := selectedStars.Moderator.Login
+		modLogin = &ml
+	}
 	base := SelectedStarsBase{
-		ID:          selectedStars.ID,
-		Status:      selectedStars.Status,
-		CreatedAt:   selectedStars.CreatedAt,
-		FormedAt:    selectedStars.FormedAt,
-		CompletedAt: selectedStars.CompletedAt,
-		CreatorID:   selectedStars.CreatorID,
-		ModeratorID: selectedStars.ModeratorID,
-		Date:        selectedStars.Date,
-		Scientist:   selectedStars.Scientist,
-		Creator:     selectedStars.Creator,
-		Moderator:   selectedStars.Moderator,
+		ID:             selectedStars.ID,
+		Status:         selectedStars.Status,
+		CreatedAt:      selectedStars.CreatedAt,
+		FormedAt:       selectedStars.FormedAt,
+		CompletedAt:    selectedStars.CompletedAt,
+		CreatorID:      selectedStars.CreatorID,
+		ModeratorID:    selectedStars.ModeratorID,
+		Date:           selectedStars.Date,
+		Scientist:      selectedStars.Scientist,
+		CreatorLogin:   selectedStars.Creator.Login,
+		ModeratorLogin: modLogin,
 	}
 
 	resp := SelectedResponse{
@@ -315,17 +320,17 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 	}
 
 	type SelectedStarsBase struct {
-		ID          int         `json:"ID"`
-		Status      string      `json:"Status"`
-		CreatedAt   time.Time   `json:"CreatedAt"`
-		FormedAt    time.Time   `json:"FormedAt"`
-		CompletedAt time.Time   `json:"CompletedAt"`
-		CreatorID   int         `json:"CreatorID"`
-		ModeratorID *int        `json:"ModeratorID"`
-		Date        time.Time   `json:"Date"`
-		Scientist   string      `json:"Scientist"`
-		Creator     model.Users `json:"Creator"`
-		Moderator   model.Users `json:"Moderator"`
+		ID             int       `json:"ID"`
+		Status         string    `json:"Status"`
+		CreatedAt      time.Time `json:"CreatedAt"`
+		FormedAt       time.Time `json:"FormedAt"`
+		CompletedAt    time.Time `json:"CompletedAt"`
+		CreatorID      int       `json:"CreatorID"`
+		ModeratorID    *int      `json:"ModeratorID"`
+		Date           time.Time `json:"Date"`
+		Scientist      string    `json:"Scientist"`
+		CreatorLogin   string    `json:"creator_login"`
+		ModeratorLogin *string   `json:"moderator_login"`
 	}
 
 	type SelectedResponse struct {
@@ -343,18 +348,23 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 		})
 	}
 
+	var modLogin *string
+	if updated.Moderator.Login != "" {
+		ml := updated.Moderator.Login
+		modLogin = &ml
+	}
 	base := SelectedStarsBase{
-		ID:          updated.ID,
-		Status:      updated.Status,
-		CreatedAt:   updated.CreatedAt,
-		FormedAt:    updated.FormedAt,
-		CompletedAt: updated.CompletedAt,
-		CreatorID:   updated.CreatorID,
-		ModeratorID: updated.ModeratorID,
-		Date:        updated.Date,
-		Scientist:   updated.Scientist,
-		Creator:     updated.Creator,
-		Moderator:   updated.Moderator,
+		ID:             updated.ID,
+		Status:         updated.Status,
+		CreatedAt:      updated.CreatedAt,
+		FormedAt:       updated.FormedAt,
+		CompletedAt:    updated.CompletedAt,
+		CreatorID:      updated.CreatorID,
+		ModeratorID:    updated.ModeratorID,
+		Date:           updated.Date,
+		Scientist:      updated.Scientist,
+		CreatorLogin:   updated.Creator.Login,
+		ModeratorLogin: modLogin,
 	}
 
 	resp := SelectedResponse{SelectedStarsBase: base, SelectedStarsItems: items}
