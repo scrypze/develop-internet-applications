@@ -34,13 +34,13 @@ type SelectedStars interface {
 	GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
 	FormSelectedStars(id int) error
-	RemoveStarFromSelected(starID int) error
 	CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error)
 	ModerateSelectedStars(id int, moderatorID int, action string) error
 }
 
 type CalculateExoplanets interface {
 	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
+	RemoveStarFromSelected(starID int) error
 }
 
 type Users interface {

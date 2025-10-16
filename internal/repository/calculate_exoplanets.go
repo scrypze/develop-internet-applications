@@ -2,10 +2,8 @@ package repository
 
 import (
 	"develop-internet-applications/internal/model"
-	"time"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type CalculateExoplanetsPostgres struct {
@@ -39,47 +37,7 @@ func (r *SelectedStarsPostgres) GetCalculateExoplanetsBySelectedStarsID(selected
 	return result, nil
 }
 
-func (r *SelectedStarsPostgres) AddStarIntoSelectedStars(starID int) error {
-	creatorID := 1
-
-	return r.db.Transaction(func(tx *gorm.DB) error {
-		var draft model.SelectedStars
-
-		err := tx.Where("creator_id = ? AND status = ?", creatorID, "draft").
-			Order("id DESC").Limit(1).
-			Find(&draft).Error
-
-		if err != nil {
-			return err
-		}
-
-		if draft.ID == 0 {
-			draft = model.SelectedStars{
-				Status:    "draft",
-				CreatorID: creatorID,
-				Date:      time.Now(),
-			}
-
-			err := tx.Create(&draft).Error
-
-			if err != nil {
-				return err
-			}
-		}
-
-		rec := model.CalculateExoplanets{
-			SelectedStarsID: draft.ID,
-			StarID:          starID,
-		}
-
-		return tx.Clauses(clause.OnConflict{
-			Columns:   []clause.Column{{Name: "selected_stars_id"}, {Name: "star_id"}},
-			DoNothing: true,
-		}).Create(&rec).Error
-	})
-}
-
-func (r *SelectedStarsPostgres) RemoveStarFromSelected(starID int) error {
+func (r *CalculateExoplanetsPostgres) RemoveStarFromSelected(starID int) error {
 	creatorID := 1
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		var draft model.SelectedStars

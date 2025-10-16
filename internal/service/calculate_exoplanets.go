@@ -16,3 +16,7 @@ func NewCalculateExoplanetsService(repo repository.CalculateExoplanets) *Calcula
 func (s *CalculateExoplanetsService) UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error {
 	return s.repo.UpdateCalculateExoplanetsComment(selectedStarsID, starID, comment)
 }
+
+func (s *CalculateExoplanetsService) RemoveStarFromSelected(starID int) error {
+	return s.repo.RemoveStarFromSelected(starID)
+}
