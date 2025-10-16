@@ -87,3 +87,20 @@ func (a *Application) RunApp() {
 	}
 	logrus.Info("Server down")
 }
+
+type pingReq struct{}
+type pingResp struct {
+   Status string `json:"status"`
+}
+
+// Ping godoc
+// @Summary      Show hello text
+// @Description  very very friendly response
+// @Tags         Tests
+// @Produce      json
+// @Success      200  {object}  pingResp
+// @Router       /ping/{name} [get]
+func (a *Application) Ping(gCtx *gin.Context) {
+   name := gCtx.Param("name")
+   gCtx.String(http.StatusOK, "Hello %s", name)
+}
