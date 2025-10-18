@@ -50,7 +50,7 @@ func NewApp() *Application {
 	}
 
 	repository := repository.NewRepository(db)
-	service := service.NewService(repository, minioClient)
+	service := service.NewService(repository, minioClient, conf)
 	handler := handler.NewHandler(service)
 	router := gin.Default()
 
@@ -90,7 +90,7 @@ func (a *Application) RunApp() {
 
 type pingReq struct{}
 type pingResp struct {
-   Status string `json:"status"`
+	Status string `json:"status"`
 }
 
 // Ping godoc
@@ -101,6 +101,6 @@ type pingResp struct {
 // @Success      200  {object}  pingResp
 // @Router       /ping/{name} [get]
 func (a *Application) Ping(gCtx *gin.Context) {
-   name := gCtx.Param("name")
-   gCtx.String(http.StatusOK, "Hello %s", name)
+	name := gCtx.Param("name")
+	gCtx.String(http.StatusOK, "Hello %s", name)
 }

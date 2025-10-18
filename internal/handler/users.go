@@ -26,20 +26,20 @@ func (h *Handler) Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
-func (h *Handler) Login(ctx *gin.Context) {
-	var p struct{ Login, Password string }
-	if err := ctx.BindJSON(&p); err != nil {
-		h.errorHandler(ctx, http.StatusBadRequest, err)
-		return
-	}
-	u, err := h.service.GetUserByLogin(p.Login)
-	if err != nil || u.Password != p.Password {
-		h.errorHandler(ctx, http.StatusUnauthorized, errInvalidCreds())
-		return
-	}
-	ctx.SetCookie("user_id", fmtID(u.ID), 3600, "/", "", false, true)
-	ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
-}
+// func (h *Handler) Login(ctx *gin.Context) {
+// 	var p struct{ Login, Password string }
+// 	if err := ctx.BindJSON(&p); err != nil {
+// 		h.errorHandler(ctx, http.StatusBadRequest, err)
+// 		return
+// 	}
+// 	u, err := h.service.GetUserByLogin(p.Login)
+// 	if err != nil || u.Password != p.Password {
+// 		h.errorHandler(ctx, http.StatusUnauthorized, errInvalidCreds())
+// 		return
+// 	}
+// 	ctx.SetCookie("user_id", fmtID(u.ID), 3600, "/", "", false, true)
+// 	ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
+// }
 
 func (h *Handler) Logout(ctx *gin.Context) {
 	ctx.SetCookie("user_id", "", -1, "/", "", false, true)

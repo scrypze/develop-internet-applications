@@ -12,7 +12,6 @@ func NewCalculateExoplanetsService(repo repository.CalculateExoplanets) *Calcula
 	return &CalculateExoplanetsService{repo: repo}
 }
 
-
 func (s *CalculateExoplanetsService) UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error {
 	return s.repo.UpdateCalculateExoplanetsComment(selectedStarsID, starID, comment)
 }

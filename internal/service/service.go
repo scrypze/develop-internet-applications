@@ -4,6 +4,7 @@ import (
 	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/repository"
 	"develop-internet-applications/pkg"
+	"develop-internet-applications/pkg/config"
 )
 
 type Service struct {
@@ -11,6 +12,7 @@ type Service struct {
 	SelectedStars
 	CalculateExoplanets
 	Users
+	Auth
 }
 
 type Star interface {
@@ -49,11 +51,17 @@ type Users interface {
 	UpdateUser(id uint, fields map[string]interface{}) error
 }
 
-func NewService(repo *repository.Repository, minio *pkg.MinioClient) *Service {
+type Auth interface {
+	AuthenticateUser(login, password string) (string, error)
+	GenerateJWTToken(userID uint) (string, error)
+}
+
+func NewService(repo *repository.Repository, minio *pkg.MinioClient, config *config.Config) *Service {
 	return &Service{
 		Star:                NewStarService(repo.Star, minio),
 		SelectedStars:       NewSelectedStarsService(repo.SelectedStars),
 		CalculateExoplanets: NewCalculateExoplanetsService(repo.CalculateExoplanets),
 		Users:               NewUsersService(repo.Users),
+		Auth:                NewAuthService(repo.Users, config),
 	}
 }

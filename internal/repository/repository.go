@@ -52,9 +52,9 @@ type Users interface {
 
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
-		Star:          NewStarPostgres(db),
-		SelectedStars: NewSelectedStarsPostgres(db),
+		Star:                NewStarPostgres(db),
+		SelectedStars:       NewSelectedStarsPostgres(db),
 		CalculateExoplanets: NewCalculateExoplanetsPostgres(db),
-		Users:         NewUsersPostgres(db),
+		Users:               NewUsersPostgres(db),
 	}
 }
