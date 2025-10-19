@@ -3,6 +3,7 @@ package repository
 import (
 	"develop-internet-applications/internal/model"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -34,7 +35,7 @@ type SelectedStars interface {
 	GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
 	FormSelectedStars(id int) error
-	CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error)
+	CreateDraftSelectedStars(creatorID uuid.UUID) (model.SelectedStars, error)
 	ModerateSelectedStars(id int, moderatorID int, action string) error
 }
 
@@ -44,7 +45,7 @@ type CalculateExoplanets interface {
 }
 
 type Users interface {
-	CreateUser(login, passwordHash string, isModerator bool) (model.Users, error)
+	CreateUser(uuid uuid.UUID, login string, role model.Role, passwordHash string) (model.Users, error)
 	GetUserByLogin(login string) (model.Users, error)
 	GetUserByID(id uint) (model.Users, error)
 	UpdateUser(id uint, fields map[string]interface{}) error

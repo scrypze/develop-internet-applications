@@ -3,6 +3,7 @@ package repository
 import (
 	"develop-internet-applications/internal/model"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -10,8 +11,8 @@ type UsersPostgres struct{ db *gorm.DB }
 
 func NewUsersPostgres(db *gorm.DB) *UsersPostgres { return &UsersPostgres{db: db} }
 
-func (r *UsersPostgres) CreateUser(login, passwordHash string, isModerator bool) (model.Users, error) {
-	u := model.Users{Login: login, Password: passwordHash, IsModerator: isModerator}
+func (r *UsersPostgres) CreateUser(uuid uuid.UUID, login string,role model.Role, passwordHash string) (model.Users, error) {
+	u := model.Users{UUID: uuid, Login: login, Role: role, Pass: passwordHash}
 	if err := r.db.Create(&u).Error; err != nil {
 		return model.Users{}, err
 	}

@@ -4,6 +4,8 @@ import (
 	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/repository"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 type SelectedStarsService struct {
@@ -64,7 +66,7 @@ func (s *SelectedStarsService) FormSelectedStars(id int) error {
 	return s.repo.FormSelectedStars(id)
 }
 
-func (s *SelectedStarsService) CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error) {
+func (s *SelectedStarsService) CreateDraftSelectedStars(creatorID uuid.UUID) (model.SelectedStars, error) {
 	return s.repo.CreateDraftSelectedStars(creatorID)
 }
 

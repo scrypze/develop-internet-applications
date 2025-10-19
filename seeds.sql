@@ -1,7 +1,7 @@
 BEGIN;
 
-INSERT INTO users (login, password, is_moderator)
-VALUES ('creator', 'x', false)
+INSERT INTO users (login, role, pass)
+VALUES ('creator', 1, 'hash')
 ON CONFLICT (login) DO NOTHING;
 
 INSERT INTO stars (

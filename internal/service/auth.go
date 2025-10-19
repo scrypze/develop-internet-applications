@@ -29,14 +29,14 @@ func (s *AuthService) AuthenticateUser(login, password string) (string, error) {
 		return "", err
 	}
 
-	if user.Password != password {
+	if user.Pass != password {
 		return "", errors.New("invalid credentials")
 	}
 
-	return s.GenerateJWTToken(user.ID)
+	return s.GenerateJWTToken(user.UUID)
 }
 
-func (s *AuthService) GenerateJWTToken(userID uint) (string, error) {
+func (s *AuthService) GenerateJWTToken(userUUID uuid.UUID) (string, error) {
 
 	claims := &model.JWTClaims{
 		StandardClaims: jwt.StandardClaims{
@@ -44,7 +44,7 @@ func (s *AuthService) GenerateJWTToken(userID uint) (string, error) {
 			IssuedAt:  time.Now().Unix(),
 			Issuer:    "exocalc-app",
 		},
-		UserUUID: uuid.New(),
+		UserUUID: userUUID,
 		Scopes:   []string{"user"},
 	}
 

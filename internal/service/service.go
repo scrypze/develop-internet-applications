@@ -5,6 +5,8 @@ import (
 	"develop-internet-applications/internal/repository"
 	"develop-internet-applications/pkg"
 	"develop-internet-applications/pkg/config"
+
+	"github.com/google/uuid"
 )
 
 type Service struct {
@@ -36,7 +38,7 @@ type SelectedStars interface {
 	GetSelectedStarsFiltered(dateFrom, dateTo, status string) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
 	FormSelectedStars(id int) error
-	CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error)
+	CreateDraftSelectedStars(creatorID uuid.UUID) (model.SelectedStars, error)
 	ModerateSelectedStars(id int, moderatorID int, action string) error
 }
 
@@ -45,7 +47,7 @@ type CalculateExoplanets interface {
 	RemoveStarFromSelected(starID int) error
 }
 type Users interface {
-	CreateUser(login, passwordHash string, isModerator bool) (model.Users, error)
+	CreateUser(UUID uuid.UUID, login string, role model.Role, passwordHash string) (model.Users, error)
 	GetUserByLogin(login string) (model.Users, error)
 	GetUserByID(id uint) (model.Users, error)
 	UpdateUser(id uint, fields map[string]interface{}) error
@@ -53,7 +55,7 @@ type Users interface {
 
 type Auth interface {
 	AuthenticateUser(login, password string) (string, error)
-	GenerateJWTToken(userID uint) (string, error)
+	GenerateJWTToken(userUUID uuid.UUID) (string, error)
 	ValidateToken(tokenString string) (*model.JWTClaims, error)
 }
 

@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -156,7 +157,7 @@ func (r *SelectedStarsPostgres) FormSelectedStars(id int) error {
 	}).Error
 }
 
-func (r *SelectedStarsPostgres) CreateDraftSelectedStars(creatorID int) (model.SelectedStars, error) {
+func (r *SelectedStarsPostgres) CreateDraftSelectedStars(creatorID uuid.UUID) (model.SelectedStars, error) {
 	draft := model.SelectedStars{
 		Status:    "draft",
 		CreatorID: creatorID,
@@ -216,7 +217,7 @@ func (r *SelectedStarsPostgres) ModerateSelectedStars(id int, moderatorID int, a
 }
 
 func (r *SelectedStarsPostgres) AddStarIntoSelectedStars(starID int) error {
-	creatorID := 1
+	creatorID, _ := uuid.Parse("b57f6d40-23a8-4e8c-9a14-1d2d2fa68a6b")
 
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		var draft model.SelectedStars

@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"develop-internet-applications/internal/model"
 	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func (h *Handler) Register(ctx *gin.Context) {
@@ -18,7 +20,7 @@ func (h *Handler) Register(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, errRequired())
 		return
 	}
-	user, err := h.service.CreateUser(p.Login, p.Password, false)
+	user, err := h.service.CreateUser(uuid.New(), p.Login, model.Client, p.Password)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return

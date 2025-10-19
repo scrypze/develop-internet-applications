@@ -40,9 +40,9 @@ func NewApp() *Application {
 	}
 
 	config.MigrateDB()
-	if err := pkg.SyncSequences(db); err != nil {
-		logrus.Fatalf("failed to sync sequences: %v", err)
-	}
+	// if err := pkg.SyncSequences(db); err != nil {
+	// 	logrus.Fatalf("failed to sync sequences: %v", err)
+	// }
 
 	minioClient, err := pkg.NewMinioClient()
 	if err != nil {

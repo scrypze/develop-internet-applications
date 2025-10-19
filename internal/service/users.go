@@ -3,6 +3,8 @@ package service
 import (
 	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/repository"
+
+	"github.com/google/uuid"
 )
 
 type UsersService struct {
@@ -11,8 +13,8 @@ type UsersService struct {
 
 func NewUsersService(r repository.Users) *UsersService { return &UsersService{repo: r} }
 
-func (s *UsersService) CreateUser(login, passwordHash string, isModerator bool) (model.Users, error) {
-	return s.repo.CreateUser(login, passwordHash, isModerator)
+func (s *UsersService) CreateUser(UUID uuid.UUID, login string, role model.Role, passwordHash string) (model.Users, error) {
+	return s.repo.CreateUser(UUID, login, role, passwordHash)
 }
 
 func (s *UsersService) GetUserByLogin(login string) (model.Users, error) {

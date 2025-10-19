@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
 
@@ -45,8 +46,8 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		CreatedAt      time.Time `json:"CreatedAt"`
 		FormedAt       time.Time `json:"FormedAt"`
 		CompletedAt    time.Time `json:"CompletedAt"`
-		CreatorID      int       `json:"CreatorID"`
-		ModeratorID    *int      `json:"ModeratorID"`
+		CreatorID      uuid.UUID       `json:"CreatorID"`
+		ModeratorID    *uuid.UUID      `json:"ModeratorID"`
 		Date           time.Time `json:"Date"`
 		Scientist      string    `json:"Scientist"`
 		CreatorLogin   string    `json:"creator_login"`
@@ -212,7 +213,8 @@ func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 }
 
 func (h *Handler) CreateDraftSelectedStars(ctx *gin.Context) {
-	creatorID := 1
+	creatorID, _ := uuid.Parse("b57f6d40-23a8-4e8c-9a14-1d2d2fa68a6b")
+	
 	draft, err := h.service.CreateDraftSelectedStars(creatorID)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
@@ -325,8 +327,8 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 		CreatedAt      time.Time `json:"CreatedAt"`
 		FormedAt       time.Time `json:"FormedAt"`
 		CompletedAt    time.Time `json:"CompletedAt"`
-		CreatorID      int       `json:"CreatorID"`
-		ModeratorID    *int      `json:"ModeratorID"`
+		CreatorID      uuid.UUID       `json:"CreatorID"`
+		ModeratorID    *uuid.UUID      `json:"ModeratorID"`
 		Date           time.Time `json:"Date"`
 		Scientist      string    `json:"Scientist"`
 		CreatorLogin   string    `json:"creator_login"`
