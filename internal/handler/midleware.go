@@ -19,10 +19,14 @@ func (h *Handler) WithAuthCheck(ctx *gin.Context) {
 
 	jwtStr = jwtStr[len(model.JwtPrefix):]
 
-	_, err := h.service.ValidateToken(jwtStr)
+	uuid, err := h.service.ValidateToken(jwtStr)
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusForbidden)
 		log.Println(err)
 		return
 	}
+
+	ctx.Set("user_uuid", uuid)
+
+	ctx.Next()
 }

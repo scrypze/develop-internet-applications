@@ -5,6 +5,7 @@ import (
 	"develop-internet-applications/internal/repository"
 	"develop-internet-applications/pkg/config"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -58,16 +59,54 @@ func (s *AuthService) GenerateJWTToken(userUUID uuid.UUID) (string, error) {
 	return tokenString, nil
 }
 
-func (s *AuthService) ValidateToken(tokenString string) (*model.JWTClaims, error) {
-	claims := &model.JWTClaims{}
-
-	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+func (s *AuthService) ValidateToken(tokenStr string) (uuid.UUID, error) {
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.config.JWT.SecretKey), nil
 	})
-
-	if err != nil {
-		return nil, err
+	if err != nil || !token.Valid {
+		return uuid.UUID{}, fmt.Errorf("invalid token")
 	}
 
-	return claims, nil
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return uuid.UUID{}, fmt.Errorf("invalid claims")
+	}
+
+	uuidStr, ok := claims["user_uuid"].(string)
+	if !ok {
+		return uuid.UUID{}, fmt.Errorf("user_uuid not found")
+	}
+
+	return uuid.Parse(uuidStr)
+}
+
+func (s *AuthService) GetUserFromToken(tokenStr string) (model.Users, error) {
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.config.JWT.SecretKey), nil
+	})
+	if err != nil || !token.Valid {
+		return model.Users{}, fmt.Errorf("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return model.Users{}, fmt.Errorf("invalid claims")
+	}
+
+	uidStr, ok := claims["user_uuid"].(string)
+	if !ok {
+		return model.Users{}, fmt.Errorf("user_uuid not found in claims")
+	}
+
+	uid, err := uuid.Parse(uidStr)
+	if err != nil {
+		return model.Users{}, fmt.Errorf("invalid UUID")
+	}
+
+	user, err := s.repo.GetUserByID(uid)
+	if err != nil {
+		return model.Users{}, err
+	}
+
+	return user, nil
 }
