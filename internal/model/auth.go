@@ -5,6 +5,10 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	JwtPrefix = "Bearer "
+)
+
 type LoginReq struct {
 	Login    string `json:"login"`
 	Password string `json:"password"`
@@ -18,6 +22,6 @@ type LoginResp struct {
 
 type JWTClaims struct {
 	jwt.StandardClaims           // все что точно необходимо по RFC
-	UserUUID           uuid.UUID `json:"user_uuid"`            // наши данные - uuid этого пользователя в базе данных
-	Scopes             []string  `json:"scopes" json:"scopes"` // список доступов в нашей системе
+	UserUUID           uuid.UUID `json:"user_uuid"` // наши данные - uuid этого пользователя в базе данных
+	Scopes             []string  `json:"scopes"`    // список доступов в нашей системе
 }

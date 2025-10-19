@@ -44,8 +44,8 @@ func (s *AuthService) GenerateJWTToken(userID uint) (string, error) {
 			IssuedAt:  time.Now().Unix(),
 			Issuer:    "exocalc-app",
 		},
-		UserUUID: uuid.New(),       
-		Scopes:   []string{"user"}, 
+		UserUUID: uuid.New(),
+		Scopes:   []string{"user"},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -56,4 +56,18 @@ func (s *AuthService) GenerateJWTToken(userID uint) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func (s *AuthService) ValidateToken(tokenString string) (*model.JWTClaims, error) {
+	claims := &model.JWTClaims{}
+
+	_, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.config.JWT.SecretKey), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return claims, nil
 }
