@@ -49,8 +49,8 @@ type CalculateExoplanets interface {
 type Users interface {
 	CreateUser(UUID uuid.UUID, login string, role model.Role, passwordHash string) (model.Users, error)
 	GetUserByLogin(login string) (model.Users, error)
-	GetUserByID(id uint) (model.Users, error)
-	UpdateUser(id uint, fields map[string]interface{}) error
+	GetUserByID(uuid uuid.UUID) (model.Users, error)
+	UpdateUser(uuid uuid.UUID, fields map[string]interface{}) error
 }
 
 type Auth interface {

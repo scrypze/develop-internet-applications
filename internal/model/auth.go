@@ -11,7 +11,7 @@ const (
 
 type LoginReq struct {
 	Login    string `json:"login"`
-	Password string `json:"password"`
+	Password string `json:"pass"`
 }
 
 type LoginResp struct {

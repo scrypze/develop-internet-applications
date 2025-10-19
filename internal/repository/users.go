@@ -27,17 +27,17 @@ func (r *UsersPostgres) GetUserByLogin(login string) (model.Users, error) {
 	return u, nil
 }
 
-func (r *UsersPostgres) GetUserByID(id uint) (model.Users, error) {
+func (r *UsersPostgres) GetUserByID(uuid uuid.UUID) (model.Users, error) {
 	var u model.Users
-	if err := r.db.First(&u, id).Error; err != nil {
+	if err := r.db.First(&u, uuid).Error; err != nil {
 		return model.Users{}, err
 	}
 	return u, nil
 }
 
-func (r *UsersPostgres) UpdateUser(id uint, fields map[string]interface{}) error {
+func (r *UsersPostgres) UpdateUser(uuid uuid.UUID, fields map[string]interface{}) error {
 	if len(fields) == 0 {
 		return nil
 	}
-	return r.db.Model(&model.Users{}).Where("id = ?", id).Updates(fields).Error
+	return r.db.Model(&model.Users{}).Where("id = ?", uuid).Updates(fields).Error
 }

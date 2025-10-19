@@ -4,7 +4,6 @@ import (
 	"develop-internet-applications/internal/model"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -49,30 +48,40 @@ func (h *Handler) Logout(ctx *gin.Context) {
 }
 
 func (h *Handler) Me(ctx *gin.Context) {
-	id, ok := readUserID(ctx)
+	uidStr, ok := readUserUUID(ctx)
 	if !ok {
 		h.errorHandler(ctx, http.StatusUnauthorized, errUnauthorized())
 		return
 	}
-	u, err := h.service.GetUserByID(id)
+
+	uuid, err := uuid.Parse(uidStr)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusUnauthorized, err)
 		return
 	}
+
+	u, err := h.service.GetUserByID(uuid)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusUnauthorized, err)
+		return
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{"user": u})
 }
 
 func fmtID(id uint) string { return fmt.Sprintf("%d", id) }
-func readUserID(ctx *gin.Context) (uint, bool) {
-	v, err := ctx.Cookie("user_id")
-	if err != nil {
-		return 0, false
-	}
-	n, convErr := strconv.ParseUint(v, 10, 64)
-	if convErr != nil {
-		return 0, false
-	}
-	return uint(n), true
+func readUserUUID(ctx *gin.Context) (string, bool) {
+    v, err := ctx.Cookie("user_id")
+    if err != nil {
+        return "", false
+    }
+
+    _, err = uuid.Parse(v)
+    if err != nil {
+        return "", false
+    }
+
+    return v, true
 }
 func errRequired() error     { return fmt.Errorf("login and password required") }
 func errInvalidCreds() error { return fmt.Errorf("invalid credentials") }
