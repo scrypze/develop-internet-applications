@@ -20,6 +20,15 @@ type LoginResp struct {
 	TokenType   string `json:"token_type"`
 }
 
+type RegisterReq struct {
+	Login string `json:"login"`
+	Password string `json:"pass"`
+}
+
+type RegisterResp struct {
+	Message string `json:"message"`
+}
+
 type JWTClaims struct {
 	jwt.StandardClaims           // все что точно необходимо по RFC
 	UserUUID           uuid.UUID `json:"user_uuid"` // наши данные - uuid этого пользователя в базе данных

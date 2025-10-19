@@ -57,6 +57,7 @@ type Auth interface {
 	AuthenticateUser(login, password string) (string, error)
 	GenerateJWTToken(userUUID uuid.UUID) (string, error)
 	ValidateToken(tokenString string) (uuid.UUID, error)
+	Register(login, password string) error
 }
 
 func NewService(repo *repository.Repository, minio *pkg.MinioClient, config *config.Config) *Service {

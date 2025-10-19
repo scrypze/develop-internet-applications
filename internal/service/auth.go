@@ -10,6 +10,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService struct {
@@ -30,7 +31,8 @@ func (s *AuthService) AuthenticateUser(login, password string) (string, error) {
 		return "", err
 	}
 
-	if user.Pass != password {
+	err = bcrypt.CompareHashAndPassword([]byte(user.Pass), []byte(password))
+	if err != nil {
 		return "", errors.New("invalid credentials")
 	}
 
@@ -109,4 +111,28 @@ func (s *AuthService) GetUserFromToken(tokenStr string) (model.Users, error) {
 	}
 
 	return user, nil
+}
+
+func (s *AuthService) Register(login, password string) error {
+	_, err := s.repo.GetUserByLogin(login)
+
+	if err == nil {
+		return errors.New("user already exists")
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return fmt.Errorf("failed to hash password: %w", err)
+	}
+
+	newUUID := uuid.New()
+	
+	_, err = s.repo.CreateUser(newUUID, login, model.Client, string(hashedPassword))
+
+	if err != nil {
+		return fmt.Errorf("failed to create user: %w", err)
+	}
+
+	return nil
 }
