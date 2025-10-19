@@ -2,6 +2,7 @@ package handler
 
 import (
 	"develop-internet-applications/internal/model"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,9 +24,16 @@ func (h *Handler) Login(ctx *gin.Context) {
 		return
 	}
 
+	if token == "" {
+		ctx.AbortWithError(http.StatusInternalServerError, fmt.Errorf("token is nil"))
+		return
+	}
+
 	ctx.JSON(http.StatusOK, model.LoginResp{
 		AccessToken: token,
 		TokenType:   "Bearer",
 		ExpiresIn:   3600,
 	})
+
+	ctx.AbortWithStatus(http.StatusForbidden)
 }

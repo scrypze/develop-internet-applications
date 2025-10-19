@@ -44,13 +44,13 @@ func (s *AuthService) GenerateJWTToken(userID uint) (string, error) {
 			IssuedAt:  time.Now().Unix(),
 			Issuer:    "exocalc-app",
 		},
-		UserUUID: uuid.New(),
-		Scopes:   []string{"user"},
+		UserUUID: uuid.New(),       
+		Scopes:   []string{"user"}, 
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	secretKey := "your-secret-key"
+	secretKey := "your-secret-key" 
 	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return "", err

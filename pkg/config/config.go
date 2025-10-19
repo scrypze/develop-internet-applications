@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -11,6 +12,12 @@ import (
 type Config struct {
 	ServiceHost string
 	ServicePort int
+	JWT         JWTConfig
+}
+
+type JWTConfig struct {
+	SecretKey string
+	ExpiresIn time.Duration
 }
 
 func NewConfig() (*Config, error) {
@@ -38,6 +45,13 @@ func NewConfig() (*Config, error) {
 
 	if err != nil {
 		return nil, err
+	}
+
+	if cfg.JWT.SecretKey == "" {
+		cfg.JWT.SecretKey = "default-secret-key-change-in-production"
+	}
+	if cfg.JWT.ExpiresIn == 0 {
+		cfg.JWT.ExpiresIn = 24 * time.Hour
 	}
 
 	log.Info("config parsed")
