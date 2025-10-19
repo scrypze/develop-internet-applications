@@ -50,8 +50,7 @@ func (s *AuthService) GenerateJWTToken(userID uint) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	secretKey := "your-secret-key" 
-	tokenString, err := token.SignedString([]byte(secretKey))
+	tokenString, err := token.SignedString([]byte(s.config.JWT.SecretKey))
 	if err != nil {
 		return "", err
 	}
