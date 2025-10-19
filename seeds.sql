@@ -1,7 +1,9 @@
 BEGIN;
 
-INSERT INTO users (login, role, pass)
-VALUES ('creator', 1, 'hash')
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+INSERT INTO users (uuid, login, role, pass)
+VALUES (uuid_generate_v4(), 'creator', 1, 'hash')
 ON CONFLICT (login) DO NOTHING;
 
 INSERT INTO stars (
@@ -14,9 +16,11 @@ INSERT INTO stars (
   (4,'Proxima Centauri','Красный карлик спектрального класса M5.5V','http://localhost:9000/exocalc/proxima.png','M5.5V','~3042 K','~0.15 R☉','~0.12 M☉','~0.0017 L☉','0.21','~4.85 млрд лет','~1.30 pc (~4.24 световых лет)')
 ON CONFLICT (id) DO NOTHING;
 
-WITH creator AS (SELECT id FROM users WHERE login='creator' LIMIT 1)
+WITH creator AS (
+  SELECT uuid FROM users WHERE login = 'creator' LIMIT 1
+)
 INSERT INTO selected_stars (id, status, scientist, creator_id, date)
-SELECT 1, 'draft', 'Михаил Ломоносов', creator.id, DATE '2003-10-12'
+SELECT 1, 'draft', 'Михаил Ломоносов', creator.uuid, DATE '2003-10-12'
 FROM creator
 ON CONFLICT (id) DO NOTHING;
 

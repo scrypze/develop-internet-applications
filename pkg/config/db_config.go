@@ -31,6 +31,8 @@ func MigrateDB() {
 		panic("failed to connect database")
 	}
 
+	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
+	
 	err = db.AutoMigrate(
 		&model.Users{},
 		&model.SelectedStars{},
