@@ -8,8 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
-
+// Login godoc
+// @Summary Авторизация пользователя
+// @Description Аутентификация пользователя с получением JWT токена
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param input body model.LoginReq true "Данные для входа"
+// @Success 200 {object} model.LoginResp
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Router /auth/login [post]
 func (h *Handler) Login(ctx *gin.Context) {
 	var req model.LoginReq
 
@@ -39,6 +48,16 @@ func (h *Handler) Login(ctx *gin.Context) {
 
 }
 
+// Register godoc
+// @Summary Регистрация нового пользователя
+// @Description Создание нового пользователя с ролью Client
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param input body model.RegisterReq true "Данные для регистрации"
+// @Success 201 {object} model.RegisterResp
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/register [post]
 func (h *Handler) Register(ctx *gin.Context) {
 	var req model.RegisterReq
 
@@ -66,6 +85,16 @@ func (h *Handler) Register(ctx *gin.Context) {
 	})
 }
 
+// RegisterAstronomer godoc
+// @Summary Регистрация астронома
+// @Description Создание нового пользователя с ролью Astronomer
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param input body model.RegisterReq true "Данные для регистрации"
+// @Success 201 {object} model.RegisterResp
+// @Failure 400 {object} map[string]interface{}
+// @Router /auth/register-astronomer [post]
 func (h *Handler) RegisterAstronomer(ctx *gin.Context) {
 	var req model.RegisterReq
 
@@ -93,6 +122,17 @@ func (h *Handler) RegisterAstronomer(ctx *gin.Context) {
 	})
 }
 
+// Logout godoc
+// @Summary Выход пользователя
+// @Description Завершение сессии пользователя и инвалидация токена
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /auth/logout [post]
 func (h *Handler) Logout(ctx *gin.Context) {
 	token, exists := ctx.Get("jwt_token")
 	if !exists {

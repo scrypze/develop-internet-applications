@@ -4,9 +4,9 @@ import (
 	"develop-internet-applications/internal/app"
 )
 
-// @title BITOP
+// @title ExoCalc API
 // @version 1.0
-// @description Bmstu Open IT Platform
+// @description API для работы с экзопланетами и звездами
 
 // @contact.name API Support
 // @contact.url https://vk.com/bmstu_schedule
@@ -14,9 +14,14 @@ import (
 
 // @license.name AS IS (NO WARRANTY)
 
-// @host 127.0.0.1
-// @schemes https http
-// @BasePath /
+// @host localhost:8080
+// @schemes http https
+// @BasePath /api
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Введите токен в формате: Bearer {token}
 
 func main() {
 	app := app.NewApp()

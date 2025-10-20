@@ -8,6 +8,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UpdateCalculateExoplanetsComment godoc
+// @Summary Обновление комментария для расчетов экзопланет
+// @Description Обновляет комментарий для конкретной звезды в заявке
+// @Tags CalculateExoplanets
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param selected_stars_id query int true "ID заявки"
+// @Param star_id query int true "ID звезды"
+// @Param input body map[string]interface{} true "Комментарий"
+// @Success 200
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /calculate-exoplanets/updateStarComment [put]
 func (h *Handler) UpdateCalculateExoplanetsComment(ctx *gin.Context) {
 	selectedStarsIDStr := ctx.Query("selected_stars_id")
 	starIDStr := ctx.Query("star_id")

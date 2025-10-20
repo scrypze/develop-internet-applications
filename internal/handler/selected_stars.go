@@ -14,6 +14,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// GetSelectedStarsByID godoc
+// @Summary Получение заявки по ID
+// @Description Возвращает заявку со всеми расчетами экзопланет
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "ID заявки"
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars/{id} [get]
 func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -98,6 +110,19 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	})
 }
 
+// AddStarToSelected godoc
+// @Summary Добавление звезды в заявку
+// @Description Добавляет звезду по ID в текущую заявку
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "ID звезды"
+// @Success 201
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars/add-star/{id} [post]
 func (h *Handler) AddStarToSelected(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -117,6 +142,19 @@ func (h *Handler) AddStarToSelected(ctx *gin.Context) {
 	ctx.Status(http.StatusCreated)
 }
 
+// DeleteSelectedStars godoc
+// @Summary Удаление заявки
+// @Description Удаляет заявку по ID
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "ID заявки"
+// @Success 200
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars/{id} [delete]
 func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -136,6 +174,17 @@ func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
+// GetSelectedStarsCount godoc
+// @Summary Получение количества звезд в текущей заявке
+// @Description Возвращает ID текущей черновой заявки и количество звезд в ней
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars/count [get]
 func (h *Handler) GetSelectedStarsCount(ctx *gin.Context) {
 	creatorID := 1
 
@@ -153,6 +202,20 @@ func (h *Handler) GetSelectedStarsCount(ctx *gin.Context) {
 	})
 }
 
+// GetSelectedStars godoc
+// @Summary Получение списка заявок
+// @Description Возвращает отфильтрованный список заявок
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param date_from query string false "Дата начала (YYYY-MM-DD)"
+// @Param date_to query string false "Дата окончания (YYYY-MM-DD)"
+// @Param status query string false "Статус заявки (draft, formed, completed, declined)"
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars [get]
 func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	dateFrom := ctx.Query("date_from")
 	dateTo := ctx.Query("date_to")
@@ -198,6 +261,19 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	})
 }
 
+// RemoveStarFromSelected godoc
+// @Summary Удаление звезды из заявки
+// @Description Удаляет звезду из текущей заявки
+// @Tags CalculateExoplanets
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "ID звезды"
+// @Success 200
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /calculate-exoplanets/remove-star/{id} [delete]
 func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	starID, err := strconv.Atoi(idStr)
@@ -212,6 +288,17 @@ func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 	ctx.Status(http.StatusOK)
 }
 
+// CreateDraftSelectedStars godoc
+// @Summary Создание черновика заявки
+// @Description Создает новую черновую заявку
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 201 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars [post]
 func (h *Handler) CreateDraftSelectedStars(ctx *gin.Context) {
 	creatorID, _ := uuid.Parse("b57f6d40-23a8-4e8c-9a14-1d2d2fa68a6b")
 
@@ -223,6 +310,20 @@ func (h *Handler) CreateDraftSelectedStars(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"selected-stars": draft})
 }
 
+// UpdateSelectedStars godoc
+// @Summary Обновление заявки
+// @Description Обновляет дату и ученого для заявки
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "ID заявки"
+// @Param input body map[string]interface{} true "Дата и ученый"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars/{id} [put]
 func (h *Handler) UpdateSelectedStars(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -254,6 +355,19 @@ func (h *Handler) UpdateSelectedStars(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"selected-stars": updated})
 }
 
+// FormSelectedStars godoc
+// @Summary Формирование заявки
+// @Description Переводит заявку из черновика в статус "formed"
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "ID заявки"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars/{id}/form [put]
 func (h *Handler) FormSelectedStars(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -276,6 +390,20 @@ func (h *Handler) FormSelectedStars(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"selected-stars": updated})
 }
 
+// ModerateSelectedStars godoc
+// @Summary Модерация заявки
+// @Description Модератор подтверждает или отклоняет заявку (требуется роль Astronomer)
+// @Tags SelectedStars
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "ID заявки"
+// @Param input body map[string]interface{} true "Действие (complete/decline) и ID модератора"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /selected-stars/{id}/moderate [put]
 func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)

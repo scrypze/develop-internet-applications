@@ -1,0 +1,859 @@
+basePath: /api
+definitions:
+  model.LoginReq:
+    properties:
+      login:
+        type: string
+      pass:
+        type: string
+    type: object
+  model.LoginResp:
+    properties:
+      access_token:
+        type: string
+      expires_in:
+        type: integer
+      token_type:
+        type: string
+    type: object
+  model.RegisterReq:
+    properties:
+      login:
+        type: string
+      pass:
+        type: string
+    type: object
+  model.RegisterResp:
+    properties:
+      message:
+        type: string
+    type: object
+  model.Star:
+    properties:
+      age:
+        type: string
+      description:
+        type: string
+      distance:
+        type: string
+      id:
+        type: integer
+      image_path:
+        type: string
+      is_deleted:
+        type: string
+      luminosity:
+        type: string
+      mass:
+        type: string
+      metallicity:
+        type: string
+      radius:
+        type: string
+      spectral_type:
+        type: string
+      temperature:
+        type: string
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: bitop@spatecon.ru
+    name: API Support
+    url: https://vk.com/bmstu_schedule
+  description: API для работы с экзопланетами и звездами
+  license:
+    name: AS IS (NO WARRANTY)
+  title: ExoCalc API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Аутентификация пользователя с получением JWT токена
+      parameters:
+      - description: Данные для входа
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.LoginResp'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Авторизация пользователя
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Завершение сессии пользователя и инвалидация токена
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Выход пользователя
+      tags:
+      - Auth
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает данные авторизованного пользователя
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получение информации о текущем пользователе
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Создание нового пользователя с ролью Client
+      parameters:
+      - description: Данные для регистрации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.RegisterResp'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Регистрация нового пользователя
+      tags:
+      - Auth
+  /auth/register-astronomer:
+    post:
+      consumes:
+      - application/json
+      description: Создание нового пользователя с ролью Astronomer
+      parameters:
+      - description: Данные для регистрации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.RegisterResp'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Регистрация астронома
+      tags:
+      - Auth
+  /calculate-exoplanets/remove-star/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет звезду из текущей заявки
+      parameters:
+      - description: ID звезды
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удаление звезды из заявки
+      tags:
+      - CalculateExoplanets
+  /calculate-exoplanets/updateStarComment:
+    put:
+      consumes:
+      - application/json
+      description: Обновляет комментарий для конкретной звезды в заявке
+      parameters:
+      - description: ID заявки
+        in: query
+        name: selected_stars_id
+        required: true
+        type: integer
+      - description: ID звезды
+        in: query
+        name: star_id
+        required: true
+        type: integer
+      - description: Комментарий
+        in: body
+        name: input
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновление комментария для расчетов экзопланет
+      tags:
+      - CalculateExoplanets
+  /selected-stars:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает отфильтрованный список заявок
+      parameters:
+      - description: Дата начала (YYYY-MM-DD)
+        in: query
+        name: date_from
+        type: string
+      - description: Дата окончания (YYYY-MM-DD)
+        in: query
+        name: date_to
+        type: string
+      - description: Статус заявки (draft, formed, completed, declined)
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получение списка заявок
+      tags:
+      - SelectedStars
+    post:
+      consumes:
+      - application/json
+      description: Создает новую черновую заявку
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Создание черновика заявки
+      tags:
+      - SelectedStars
+  /selected-stars/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет заявку по ID
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удаление заявки
+      tags:
+      - SelectedStars
+    get:
+      consumes:
+      - application/json
+      description: Возвращает заявку со всеми расчетами экзопланет
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получение заявки по ID
+      tags:
+      - SelectedStars
+    put:
+      consumes:
+      - application/json
+      description: Обновляет дату и ученого для заявки
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Дата и ученый
+        in: body
+        name: input
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновление заявки
+      tags:
+      - SelectedStars
+  /selected-stars/{id}/form:
+    put:
+      consumes:
+      - application/json
+      description: Переводит заявку из черновика в статус "formed"
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Формирование заявки
+      tags:
+      - SelectedStars
+  /selected-stars/{id}/moderate:
+    put:
+      consumes:
+      - application/json
+      description: Модератор подтверждает или отклоняет заявку (требуется роль Astronomer)
+      parameters:
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Действие (complete/decline) и ID модератора
+        in: body
+        name: input
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Модерация заявки
+      tags:
+      - SelectedStars
+  /selected-stars/add-star/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Добавляет звезду по ID в текущую заявку
+      parameters:
+      - description: ID звезды
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Добавление звезды в заявку
+      tags:
+      - SelectedStars
+  /selected-stars/count:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает ID текущей черновой заявки и количество звезд в ней
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Получение количества звезд в текущей заявке
+      tags:
+      - SelectedStars
+  /stars:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает список всех звезд или отфильтрованный по названию
+      parameters:
+      - description: Поиск по названию звезды
+        in: query
+        name: searchedStar
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получение списка звезд
+      tags:
+      - Stars
+    post:
+      consumes:
+      - application/json
+      description: Создает новую звезду (требуется роль Astronomer)
+      parameters:
+      - description: Данные звезды
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Star'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Star'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Создание новой звезды
+      tags:
+      - Stars
+  /stars/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет звезду по ID (требуется роль Astronomer)
+      parameters:
+      - description: ID звезды
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Удаление звезды
+      tags:
+      - Stars
+    get:
+      consumes:
+      - application/json
+      description: Возвращает данные звезды по указанному ID
+      parameters:
+      - description: ID звезды
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получение звезды по ID
+      tags:
+      - Stars
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные существующей звезды (требуется роль Astronomer)
+      parameters:
+      - description: ID звезды
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные звезды
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/model.Star'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Star'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Обновление звезды
+      tags:
+      - Stars
+  /stars/{id}/image:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Загружает изображение для звезды (требуется роль Astronomer)
+      parameters:
+      - description: ID звезды
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Файл изображения
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Загрузка изображения звезды
+      tags:
+      - Stars
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: 'Введите токен в формате: Bearer {token}'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -8,6 +8,16 @@ import (
 	"github.com/google/uuid"
 )
 
+// Me godoc
+// @Summary Получение информации о текущем пользователе
+// @Description Возвращает данные авторизованного пользователя
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Router /auth/me [get]
 func (h *Handler) Me(ctx *gin.Context) {
 	uuidVal, exists := ctx.Get("user_uuid")
 	if !exists {

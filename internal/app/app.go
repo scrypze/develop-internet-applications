@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	_ "develop-internet-applications/docs"
 	"develop-internet-applications/internal/handler"
 	"develop-internet-applications/internal/repository"
 	"develop-internet-applications/internal/service"
