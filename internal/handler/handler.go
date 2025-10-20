@@ -23,14 +23,12 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		auth.POST("/register", h.Register)
 		auth.POST("/login", h.Login)
 		auth.POST("/logout", h.Logout)
-		// auth.GET("/me", h.Me)
 	}
 
 	protectedAuth := api.Group("/auth")
 	{
-		protectedAuth.Use(h.WithAuthCheck).GET("/me", h.Me)
+		protectedAuth.Use(h.WithAuthCheck()).GET("/me", h.Me)
 	}
-
 
 	stars := api.Group("/stars")
 	{

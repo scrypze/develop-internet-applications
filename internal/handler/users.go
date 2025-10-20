@@ -30,6 +30,7 @@ func (h *Handler) Me(ctx *gin.Context) {
 		return
 	}
 
+	
 	ctx.JSON(http.StatusOK, gin.H{"UUID": user.UUID, "login": user.Login, "role": user.Role})
 }
 

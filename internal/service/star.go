@@ -72,7 +72,8 @@ func (s *StarService) DeleteStar(id int) error {
 
 func (s *StarService) UploadStarImage(id int, file []byte, filename string) error {
 	star, err := s.repo.GetStarByID(id)
-	if star.ID == 0 {
+
+	if star.ID == 0 || err != nil {
 		return fmt.Errorf("star not found")
 	}
 

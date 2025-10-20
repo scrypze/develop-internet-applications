@@ -55,8 +55,9 @@ type Users interface {
 
 type Auth interface {
 	AuthenticateUser(login, password string) (string, error)
-	GenerateJWTToken(userUUID uuid.UUID) (string, error)
+	GenerateJWTToken(userUUID uuid.UUID, role model.Role) (string, error)
 	ValidateToken(tokenString string) (uuid.UUID, error)
+	ValidateTokenWithRole(tokenString string) (*model.JWTClaims, error)
 	Register(login, password string) error
 }
 

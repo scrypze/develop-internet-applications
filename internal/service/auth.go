@@ -36,10 +36,10 @@ func (s *AuthService) AuthenticateUser(login, password string) (string, error) {
 		return "", errors.New("invalid credentials")
 	}
 
-	return s.GenerateJWTToken(user.UUID)
+	return s.GenerateJWTToken(user.UUID, user.Role)
 }
 
-func (s *AuthService) GenerateJWTToken(userUUID uuid.UUID) (string, error) {
+func (s *AuthService) GenerateJWTToken(userUUID uuid.UUID, role model.Role) (string, error) {
 
 	claims := &model.JWTClaims{
 		StandardClaims: jwt.StandardClaims{
@@ -48,7 +48,7 @@ func (s *AuthService) GenerateJWTToken(userUUID uuid.UUID) (string, error) {
 			Issuer:    "exocalc-app",
 		},
 		UserUUID: userUUID,
-		Scopes:   []string{"user"},
+		Role:     role,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -80,6 +80,22 @@ func (s *AuthService) ValidateToken(tokenStr string) (uuid.UUID, error) {
 	}
 
 	return uuid.Parse(uuidStr)
+}
+
+func (s *AuthService) ValidateTokenWithRole(tokenStr string) (*model.JWTClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &model.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.config.JWT.SecretKey), nil
+	})
+	if err != nil || !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
+
+	claims, ok := token.Claims.(*model.JWTClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid claims")
+	}
+
+	return claims, nil
 }
 
 func (s *AuthService) GetUserFromToken(tokenStr string) (model.Users, error) {
@@ -127,7 +143,7 @@ func (s *AuthService) Register(login, password string) error {
 	}
 
 	newUUID := uuid.New()
-	
+
 	_, err = s.repo.CreateUser(newUUID, login, model.Client, string(hashedPassword))
 
 	if err != nil {
