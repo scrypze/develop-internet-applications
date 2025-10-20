@@ -59,6 +59,7 @@ type Auth interface {
 	ValidateToken(tokenString string) (uuid.UUID, error)
 	ValidateTokenWithRole(tokenString string) (*model.JWTClaims, error)
 	Register(login, password string) error
+	Logout(tokenStr string) error
 }
 
 func NewService(repo *repository.Repository, minio *pkg.MinioClient, redis *pkg.RedisClient, config *config.Config) *Service {

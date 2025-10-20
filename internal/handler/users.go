@@ -8,11 +8,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// func (h *Handler) Logout(ctx *gin.Context) {
-// 	ctx.SetCookie("user_id", "", -1, "/", "", false, true)
-// 	ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
-// }
-
 func (h *Handler) Me(ctx *gin.Context) {
 	uuidVal, exists := ctx.Get("user_uuid")
 	if !exists {

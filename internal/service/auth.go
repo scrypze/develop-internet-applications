@@ -44,7 +44,6 @@ func (s *AuthService) AuthenticateUser(login, password string) (string, error) {
 }
 
 func (s *AuthService) GenerateJWTToken(userUUID uuid.UUID, role model.Role) (string, error) {
-
 	claims := &model.JWTClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(24 * time.Hour).Unix(),
@@ -66,6 +65,15 @@ func (s *AuthService) GenerateJWTToken(userUUID uuid.UUID, role model.Role) (str
 }
 
 func (s *AuthService) ValidateToken(tokenStr string) (uuid.UUID, error) {
+	ctx := context.Background()
+	isBlacklisted, err := s.redisClient.CheckJWTInBlacklist(ctx, tokenStr)
+	if err != nil {
+		return uuid.UUID{}, fmt.Errorf("error checking blacklist: %w", err)
+	}
+	if isBlacklisted {
+		return uuid.UUID{}, fmt.Errorf("token is blacklisted")
+	}
+
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.config.JWT.SecretKey), nil
 	})
@@ -87,6 +95,15 @@ func (s *AuthService) ValidateToken(tokenStr string) (uuid.UUID, error) {
 }
 
 func (s *AuthService) ValidateTokenWithRole(tokenStr string) (*model.JWTClaims, error) {
+	ctx := context.Background()
+	isBlacklisted, err := s.redisClient.CheckJWTInBlacklist(ctx, tokenStr)
+	if err != nil {
+		return nil, fmt.Errorf("error checking blacklist: %w", err)
+	}
+	if isBlacklisted {
+		return nil, fmt.Errorf("token is blacklisted")
+	}
+	
 	token, err := jwt.ParseWithClaims(tokenStr, &model.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.config.JWT.SecretKey), nil
 	})

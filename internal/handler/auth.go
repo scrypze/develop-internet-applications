@@ -65,5 +65,25 @@ func (h *Handler) Register(ctx *gin.Context) {
 }
 
 func (h *Handler) Logout(ctx *gin.Context) {
-	
+	token, exists := ctx.Get("jwt_token")
+	if !exists {
+		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("token not found in context"))
+		return
+	}
+
+	tokenStr, ok := token.(string)
+	if !ok {
+		h.errorHandler(ctx, http.StatusInternalServerError, fmt.Errorf("invalid token type"))
+		return
+	}
+
+	err := h.service.Logout(tokenStr)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "logged out successfully",
+	})
 }
