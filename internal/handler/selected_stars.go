@@ -41,17 +41,17 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	}
 
 	type SelectedStarsBase struct {
-		ID             int       `json:"ID"`
-		Status         string    `json:"Status"`
-		CreatedAt      time.Time `json:"CreatedAt"`
-		FormedAt       time.Time `json:"FormedAt"`
-		CompletedAt    time.Time `json:"CompletedAt"`
-		CreatorID      uuid.UUID       `json:"CreatorID"`
-		ModeratorID    *uuid.UUID      `json:"ModeratorID"`
-		Date           time.Time `json:"Date"`
-		Scientist      string    `json:"Scientist"`
-		CreatorLogin   string    `json:"creator_login"`
-		ModeratorLogin *string   `json:"moderator_login"`
+		ID             int        `json:"ID"`
+		Status         string     `json:"Status"`
+		CreatedAt      time.Time  `json:"CreatedAt"`
+		FormedAt       time.Time  `json:"FormedAt"`
+		CompletedAt    time.Time  `json:"CompletedAt"`
+		CreatorID      uuid.UUID  `json:"CreatorID"`
+		ModeratorID    *uuid.UUID `json:"ModeratorID"`
+		Date           time.Time  `json:"Date"`
+		Scientist      string     `json:"Scientist"`
+		CreatorLogin   string     `json:"creator_login"`
+		ModeratorLogin *string    `json:"moderator_login"`
 	}
 
 	type SelectedResponse struct {
@@ -214,7 +214,7 @@ func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 
 func (h *Handler) CreateDraftSelectedStars(ctx *gin.Context) {
 	creatorID, _ := uuid.Parse("b57f6d40-23a8-4e8c-9a14-1d2d2fa68a6b")
-	
+
 	draft, err := h.service.CreateDraftSelectedStars(creatorID)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
@@ -322,17 +322,17 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 	}
 
 	type SelectedStarsBase struct {
-		ID             int       `json:"ID"`
-		Status         string    `json:"Status"`
-		CreatedAt      time.Time `json:"CreatedAt"`
-		FormedAt       time.Time `json:"FormedAt"`
-		CompletedAt    time.Time `json:"CompletedAt"`
-		CreatorID      uuid.UUID       `json:"CreatorID"`
-		ModeratorID    *uuid.UUID      `json:"ModeratorID"`
-		Date           time.Time `json:"Date"`
-		Scientist      string    `json:"Scientist"`
-		CreatorLogin   string    `json:"creator_login"`
-		ModeratorLogin *string   `json:"moderator_login"`
+		ID             int        `json:"ID"`
+		Status         string     `json:"Status"`
+		CreatedAt      time.Time  `json:"CreatedAt"`
+		FormedAt       time.Time  `json:"FormedAt"`
+		CompletedAt    time.Time  `json:"CompletedAt"`
+		CreatorID      uuid.UUID  `json:"CreatorID"`
+		ModeratorID    *uuid.UUID `json:"ModeratorID"`
+		Date           time.Time  `json:"Date"`
+		Scientist      string     `json:"Scientist"`
+		CreatorLogin   string     `json:"creator_login"`
+		ModeratorLogin *string    `json:"moderator_login"`
 	}
 
 	type SelectedResponse struct {

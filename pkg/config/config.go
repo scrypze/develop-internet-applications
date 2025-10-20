@@ -12,7 +12,12 @@ import (
 type Config struct {
 	ServiceHost string
 	ServicePort int
-	JWT         JWTConfig
+
+	JWT   JWTConfig
+	Redis RedisConfig
+
+	DialTimeout time.Duration
+	ReadTimeout time.Duration
 }
 
 type JWTConfig struct {
@@ -53,6 +58,20 @@ func NewConfig() (*Config, error) {
 	if cfg.JWT.ExpiresIn == 0 {
 		cfg.JWT.ExpiresIn = 24 * time.Hour
 	}
+
+	if cfg.DialTimeout == 0 {
+		cfg.DialTimeout = 5 * time.Second
+	}
+	if cfg.ReadTimeout == 0 {
+		cfg.ReadTimeout = 3 * time.Second
+	}
+
+	cfgRedis, err := ConfRedis(cfg.DialTimeout, cfg.ReadTimeout)
+	if err != nil {
+		return nil, err
+	}
+
+	cfg.Redis = cfgRedis
 
 	log.Info("config parsed")
 

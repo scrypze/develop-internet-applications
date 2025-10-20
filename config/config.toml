@@ -3,3 +3,6 @@ ServicePort = 8080
 
 SecretKey = "your-super-secret-jwt-key-change-in-production"
 ExpiresIn = "24h"
+
+DialTimeout = "10s"
+ReadTimeout = "10s"

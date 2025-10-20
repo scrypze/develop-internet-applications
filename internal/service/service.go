@@ -61,12 +61,12 @@ type Auth interface {
 	Register(login, password string) error
 }
 
-func NewService(repo *repository.Repository, minio *pkg.MinioClient, config *config.Config) *Service {
+func NewService(repo *repository.Repository, minio *pkg.MinioClient, redis *pkg.RedisClient, config *config.Config) *Service {
 	return &Service{
 		Star:                NewStarService(repo.Star, minio),
 		SelectedStars:       NewSelectedStarsService(repo.SelectedStars),
 		CalculateExoplanets: NewCalculateExoplanetsService(repo.CalculateExoplanets),
 		Users:               NewUsersService(repo.Users),
-		Auth:                NewAuthService(repo.Users, config),
+		Auth:                NewAuthService(repo.Users, redis, config),
 	}
 }

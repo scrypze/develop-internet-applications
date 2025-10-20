@@ -20,9 +20,10 @@ import (
 )
 
 type Application struct {
-	Config  *config.Config
-	Router  *gin.Engine
-	Handler *handler.Handler
+	Config      *config.Config
+	Router      *gin.Engine
+	Handler     *handler.Handler
+	RedisClient *pkg.RedisClient
 }
 
 func NewApp() *Application {
@@ -49,15 +50,22 @@ func NewApp() *Application {
 		logrus.Fatalf("failed to create minio client: %v", err)
 	}
 
+	ctx := context.Background()
+	redisClient, err := pkg.NewRedisClient(ctx, conf.Redis)
+	if err != nil {
+		logrus.Fatalf("failed to create redis client: %v", err)
+	}
+
 	repository := repository.NewRepository(db)
-	service := service.NewService(repository, minioClient, conf)
+	service := service.NewService(repository, minioClient, redisClient, conf)
 	handler := handler.NewHandler(service)
 	router := gin.Default()
 
 	return &Application{
-		Config:  conf,
-		Router:  router,
-		Handler: handler,
+		Config:      conf,
+		Router:      router,
+		Handler:     handler,
+		RedisClient: redisClient,
 	}
 }
 
@@ -82,8 +90,14 @@ func (a *Application) RunApp() {
 	logrus.Info("Shutting down server")
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+
 	if err := server.Shutdown(ctx); err != nil {
 		logrus.Errorf("Server shutdown error: %v", err)
 	}
+
+	if err := a.RedisClient.Close(); err != nil {
+		logrus.Errorf("Redis close error: %v", err)
+	}
+
 	logrus.Info("Server down")
 }

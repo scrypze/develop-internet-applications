@@ -11,7 +11,7 @@ type UsersPostgres struct{ db *gorm.DB }
 
 func NewUsersPostgres(db *gorm.DB) *UsersPostgres { return &UsersPostgres{db: db} }
 
-func (r *UsersPostgres) CreateUser(uuid uuid.UUID, login string,role model.Role, passwordHash string) (model.Users, error) {
+func (r *UsersPostgres) CreateUser(uuid uuid.UUID, login string, role model.Role, passwordHash string) (model.Users, error) {
 	u := model.Users{UUID: uuid, Login: login, Role: role, Pass: passwordHash}
 	if err := r.db.Create(&u).Error; err != nil {
 		return model.Users{}, err

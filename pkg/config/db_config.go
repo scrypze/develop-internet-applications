@@ -32,7 +32,7 @@ func MigrateDB() {
 	}
 
 	db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
-	
+
 	err = db.AutoMigrate(
 		&model.Users{},
 		&model.SelectedStars{},

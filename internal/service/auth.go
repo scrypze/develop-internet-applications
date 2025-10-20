@@ -3,6 +3,7 @@ package service
 import (
 	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/repository"
+	"develop-internet-applications/pkg"
 	"develop-internet-applications/pkg/config"
 	"errors"
 	"fmt"
@@ -14,14 +15,16 @@ import (
 )
 
 type AuthService struct {
-	repo   repository.Users
-	config *config.Config
+	repo        repository.Users
+	redisClient *pkg.RedisClient
+	config      *config.Config
 }
 
-func NewAuthService(repo repository.Users, config *config.Config) *AuthService {
+func NewAuthService(repo repository.Users, redisClient *pkg.RedisClient, config *config.Config) *AuthService {
 	return &AuthService{
-		repo:   repo,
-		config: config,
+		repo:        repo,
+		redisClient: redisClient,
+		config:      config,
 	}
 }
 
