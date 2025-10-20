@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/repository"
 	"develop-internet-applications/pkg"
@@ -154,4 +155,28 @@ func (s *AuthService) Register(login, password string) error {
 	}
 
 	return nil
+}
+
+func (s *AuthService) Logout(tokenStr string) error {
+	token, err := jwt.ParseWithClaims(tokenStr, &model.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.config.JWT.SecretKey), nil
+	})
+	if err != nil {
+		return fmt.Errorf("invalid token: %w", err)
+	}
+
+	claims, ok := token.Claims.(*model.JWTClaims)
+	if !ok {
+		return fmt.Errorf("invalid claims")
+	}
+
+	expiresAt := time.Unix(claims.ExpiresAt, 0)
+	ttl := time.Until(expiresAt)
+
+	if ttl <= 0 {
+		return nil
+	}
+
+	ctx := context.Background()
+	return s.redisClient.WriteJWTToBlacklist(ctx, tokenStr, ttl)
 }

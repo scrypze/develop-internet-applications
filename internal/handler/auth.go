@@ -63,3 +63,7 @@ func (h *Handler) Register(ctx *gin.Context) {
 		Message: "user registered successfully",
 	})
 }
+
+func (h *Handler) Logout(ctx *gin.Context) {
+	
+}

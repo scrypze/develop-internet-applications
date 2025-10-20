@@ -5,11 +5,15 @@ import (
 	"develop-internet-applications/pkg/config"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 )
 
-const servisPrefix = "exocalc"
+const (
+	servicePrefix = "exocalc:"
+	jwtPrefix     = "jwt:"
+)
 
 type RedisClient struct {
 	cfg    config.RedisConfig
@@ -41,4 +45,23 @@ func NewRedisClient(ctx context.Context, cfg config.RedisConfig) (*RedisClient, 
 
 func (c *RedisClient) Close() error {
 	return c.client.Close()
+}
+
+func getJWTKey(token string) string {
+	return servicePrefix + jwtPrefix + token
+}
+
+func (c *RedisClient) WriteJWTToBlacklist(ctx context.Context, jwtStr string, jwtTTL time.Duration) error {
+	return c.client.Set(ctx, getJWTKey(jwtStr), true, jwtTTL).Err()
+}
+
+func (c *RedisClient) CheckJWTInBlacklist(ctx context.Context, jwtStr string) (bool, error) {
+	err := c.client.Get(ctx, getJWTKey(jwtStr)).Err()
+	if err == redis.Nil {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
