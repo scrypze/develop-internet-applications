@@ -1,10 +1,14 @@
 package handler
 
 import (
+	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 type Handler struct {
@@ -16,28 +20,39 @@ func NewHandler(service *service.Service) *Handler {
 }
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	api := router.Group("/api")
 
 	auth := api.Group("/auth")
 	{
 		auth.POST("/register", h.Register)
+		auth.POST("/register-astronomer", h.RegisterAstronomer)
 		auth.POST("/login", h.Login)
-		auth.POST("/logout", h.Logout)
 	}
 
 	protectedAuth := api.Group("/auth")
 	{
 		protectedAuth.Use(h.WithAuthCheck()).GET("/me", h.Me)
+		protectedAuth.Use(h.WithAuthCheck()).POST("/logout", h.Logout)
 	}
 
 	stars := api.Group("/stars")
 	{
 		stars.GET("", h.GetStars)
 		stars.GET("/:id", h.GetStarByID)
-		stars.POST("", h.CreateStar)
-		stars.PUT("/:id", h.UpdateStar)
-		stars.DELETE("/:id", h.DeleteStar)
-		stars.POST("/:id/image", h.UploadStarImage)
+		// stars.POST("", h.CreateStar)
+		// stars.PUT("/:id", h.UpdateStar)
+		// stars.DELETE("/:id", h.DeleteStar)
+		// stars.POST("/:id/image", h.UploadStarImage)
+	}
+
+	protectedStars := api.Group("/stars")
+	{
+		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).POST("", h.CreateStar)
+		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).PUT("/:id", h.UpdateStar)
+		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).DELETE("/:id", h.DeleteStar)
+		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).POST("/:id/image", h.UploadStarImage)
 	}
 
 	selectedStars := api.Group("/selected-stars")

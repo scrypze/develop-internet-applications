@@ -3,6 +3,7 @@ package model
 type Role int
 
 const (
-	Client Role = iota
+	Guest Role = iota
+	Client
 	Astronomer
 )

@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
+
 func (h *Handler) Login(ctx *gin.Context) {
 	var req model.LoginReq
 
@@ -53,6 +55,33 @@ func (h *Handler) Register(ctx *gin.Context) {
 	}
 
 	err = h.service.Register(req.Login, req.Password)
+
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, &model.RegisterResp{
+		Message: "user registered successfully",
+	})
+}
+
+func (h *Handler) RegisterAstronomer(ctx *gin.Context) {
+	var req model.RegisterReq
+
+	err := ctx.BindJSON(&req)
+
+	if err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	if req.Login == "" || req.Password == "" {
+		h.errorHandler(ctx, http.StatusBadRequest, errRequired())
+		return
+	}
+
+	err = h.service.RegisterAstronomer(req.Login, req.Password)
 
 	if err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)

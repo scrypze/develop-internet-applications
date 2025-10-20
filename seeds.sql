@@ -3,7 +3,7 @@ BEGIN;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 INSERT INTO users (uuid, login, role, pass)
-VALUES (uuid_generate_v4(), 'creator', 1, 'hash')
+VALUES (uuid_generate_v4(), 'creator', 2, 'hash')
 ON CONFLICT (login) DO NOTHING;
 
 INSERT INTO stars (
@@ -31,5 +31,8 @@ INSERT INTO calculate_exoplanets (
   (1,2,'',2.5,'0.12-0.24 a.e.'),
   (1,3,'',2.5,'0.12-0.24 a.e.')
 ON CONFLICT DO NOTHING;
+
+-- Обновление sequence для таблицы stars после явной вставки ID
+SELECT setval('stars_id_seq', (SELECT COALESCE(MAX(id), 1) FROM stars));
 
 COMMIT;

@@ -103,7 +103,7 @@ func (s *AuthService) ValidateTokenWithRole(tokenStr string) (*model.JWTClaims, 
 	if isBlacklisted {
 		return nil, fmt.Errorf("token is blacklisted")
 	}
-	
+
 	token, err := jwt.ParseWithClaims(tokenStr, &model.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.config.JWT.SecretKey), nil
 	})
@@ -166,6 +166,30 @@ func (s *AuthService) Register(login, password string) error {
 	newUUID := uuid.New()
 
 	_, err = s.repo.CreateUser(newUUID, login, model.Client, string(hashedPassword))
+
+	if err != nil {
+		return fmt.Errorf("failed to create user: %w", err)
+	}
+
+	return nil
+}
+
+func (s *AuthService) RegisterAstronomer(login, password string) error {
+	_, err := s.repo.GetUserByLogin(login)
+
+	if err == nil {
+		return errors.New("user already exists")
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return fmt.Errorf("failed to hash password: %w", err)
+	}
+
+	newUUID := uuid.New()
+
+	_, err = s.repo.CreateUser(newUUID, login, model.Astronomer, string(hashedPassword))
 
 	if err != nil {
 		return fmt.Errorf("failed to create user: %w", err)

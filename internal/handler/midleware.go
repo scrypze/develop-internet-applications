@@ -22,7 +22,7 @@ func (h *Handler) WithAuthCheck(allowedRoles ...model.Role) gin.HandlerFunc {
 		jwtStr = jwtStr[len(model.JwtPrefix):]
 
 		ctx.Set("jwt_token", jwtStr)
-		
+
 		if len(allowedRoles) == 0 {
 			uuid, err := h.service.ValidateToken(jwtStr)
 			if err != nil {
@@ -37,6 +37,7 @@ func (h *Handler) WithAuthCheck(allowedRoles ...model.Role) gin.HandlerFunc {
 		}
 
 		claims, err := h.service.ValidateTokenWithRole(jwtStr)
+		
 		if err != nil {
 			ctx.AbortWithStatus(http.StatusForbidden)
 			log.Printf("token validation failed: %v", err)
