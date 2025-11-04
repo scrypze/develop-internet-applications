@@ -70,7 +70,7 @@ func (s *SelectedStarsService) CreateDraftSelectedStars(creatorID uuid.UUID) (mo
 	return s.repo.CreateDraftSelectedStars(creatorID)
 }
 
-func (s *SelectedStarsService) ModerateSelectedStars(id int, moderatorID int, action string) error {
+func (s *SelectedStarsService) ModerateSelectedStars(id int, moderatorID uuid.UUID, action string) error {
 	if _, err := s.repo.GetSelectedStarsByID(id); err != nil {
 		return err
 	}

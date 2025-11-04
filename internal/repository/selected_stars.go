@@ -169,7 +169,7 @@ func (r *SelectedStarsPostgres) CreateDraftSelectedStars(creatorID uuid.UUID) (m
 	return draft, nil
 }
 
-func (r *SelectedStarsPostgres) ModerateSelectedStars(id int, moderatorID int, action string) error {
+func (r *SelectedStarsPostgres) ModerateSelectedStars(id int, moderatorID uuid.UUID, action string) error {
 	status := ""
 	switch action {
 	case "complete":

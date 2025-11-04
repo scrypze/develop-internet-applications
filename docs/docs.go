@@ -87,7 +87,7 @@ const docTemplate = `{
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Выход пользователя",
+                "summary": "Деавторизация пользователя",
                 "responses": {
                     "200": {
                         "description": "OK",

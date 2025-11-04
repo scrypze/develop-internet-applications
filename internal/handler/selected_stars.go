@@ -62,8 +62,8 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		ModeratorID    *uuid.UUID `json:"ModeratorID"`
 		Date           time.Time  `json:"Date"`
 		Scientist      string     `json:"Scientist"`
-		CreatorLogin   string     `json:"creator_login"`
-		ModeratorLogin *string    `json:"moderator_login"`
+		//CreatorLogin   string     `json:"creator_login"`
+		//ModeratorLogin *string    `json:"moderator_login"`
 	}
 
 	type SelectedResponse struct {
@@ -81,11 +81,11 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		})
 	}
 
-	var modLogin *string
-	if selectedStars.Moderator.Login != "" {
-		ml := selectedStars.Moderator.Login
-		modLogin = &ml
-	}
+	// var modLogin *string
+	// if selectedStars.Moderator.Login != "" {
+	// 	ml := selectedStars.Moderator.Login
+	// 	modLogin = &ml
+	// }
 	base := SelectedStarsBase{
 		ID:             selectedStars.ID,
 		Status:         selectedStars.Status,
@@ -96,8 +96,8 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		ModeratorID:    selectedStars.ModeratorID,
 		Date:           selectedStars.Date,
 		Scientist:      selectedStars.Scientist,
-		CreatorLogin:   selectedStars.Creator.Login,
-		ModeratorLogin: modLogin,
+		//CreatorLogin:   selectedStars.Creator.Login,
+		//ModeratorLogin: modLogin,
 	}
 
 	resp := SelectedResponse{
@@ -414,14 +414,14 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 
 	var payload struct {
 		Action      string `json:"action"`
-		ModeratorID int    `json:"moderator_id"`
+		ModeratorID uuid.UUID    `json:"moderator_id"`
 	}
 	if err := ctx.BindJSON(&payload); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
 
-	if payload.ModeratorID == 0 || (payload.Action != "complete" && payload.Action != "decline") {
+	if payload.ModeratorID == uuid.Nil || (payload.Action != "complete" && payload.Action != "decline") {
 		h.errorHandler(ctx, http.StatusBadRequest, fmt.Errorf("invalid payload"))
 		return
 	}

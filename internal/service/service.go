@@ -39,7 +39,7 @@ type SelectedStars interface {
 	UpdateSelectedStars(id int, date string, scientist string) error
 	FormSelectedStars(id int) error
 	CreateDraftSelectedStars(creatorID uuid.UUID) (model.SelectedStars, error)
-	ModerateSelectedStars(id int, moderatorID int, action string) error
+	ModerateSelectedStars(id int, moderatorID uuid.UUID, action string) error
 }
 
 type CalculateExoplanets interface {

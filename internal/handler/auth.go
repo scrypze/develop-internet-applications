@@ -123,7 +123,7 @@ func (h *Handler) RegisterAstronomer(ctx *gin.Context) {
 }
 
 // Logout godoc
-// @Summary Выход пользователя
+// @Summary Деавторизация пользователя
 // @Description Завершение сессии пользователя и инвалидация токена
 // @Tags Auth
 // @Accept json

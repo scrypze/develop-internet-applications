@@ -126,7 +126,7 @@ paths:
             type: object
       security:
       - BearerAuth: []
-      summary: Выход пользователя
+      summary: Деавторизация пользователя
       tags:
       - Auth
   /auth/me:
