@@ -78,7 +78,7 @@ func (s *StarService) UploadStarImage(id int, file []byte, filename string) erro
 	}
 
 	reader := bytes.NewReader(file)
-	imageURL, err := s.minioClient.UploadImage(star.Title, reader, int64(len(file)), filename)
+	imageURL, err := s.minioClient.UploadImage(id, reader, int64(len(file)), filename)
 	if err != nil {
 		return err
 	}

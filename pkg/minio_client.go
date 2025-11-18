@@ -5,15 +5,18 @@ import (
 	"fmt"
 	"io"
 
+	"develop-internet-applications/pkg/config"
+
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 type MinioClient struct {
 	client *minio.Client
+	config *config.Config
 }
 
-func NewMinioClient() (*MinioClient, error) {
+func NewMinioClient(cfg *config.Config) (*MinioClient, error) {
 	client, err := minio.New("localhost:9000", &minio.Options{
 		Creds:  credentials.NewStaticV4("minio", "minio124", ""),
 		Secure: false,
@@ -21,11 +24,14 @@ func NewMinioClient() (*MinioClient, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &MinioClient{client: client}, nil
+	return &MinioClient{
+		client: client,
+		config: cfg,
+	}, nil
 }
 
-func (m *MinioClient) UploadImage(star string, file io.Reader, fileSize int64, filename string) (string, error) {
-	objectName := fmt.Sprintf("%s%s", star, ".png")
+func (m *MinioClient) UploadImage(starID int, file io.Reader, fileSize int64, filename string) (string, error) {
+	objectName := fmt.Sprintf("%d.png", starID)
 
 	_, err := m.client.PutObject(context.Background(), "stars", objectName, file, fileSize, minio.PutObjectOptions{
 		ContentType: "image/png",
@@ -34,7 +40,21 @@ func (m *MinioClient) UploadImage(star string, file io.Reader, fileSize int64, f
 		return "", err
 	}
 
-	return fmt.Sprintf("http://localhost:9000/stars/%s", objectName), nil
+	// Формируем URL используя конфигурацию
+	protocol := m.config.ServiceProtocol
+	if protocol == "" {
+		protocol = "https"
+	}
+	publicHost := m.config.ServicePublicHost
+	if publicHost == "" {
+		publicHost = "172.20.10.4"
+	}
+	port := m.config.ServicePort
+	if port == 0 {
+		port = 8080
+	}
+
+	return fmt.Sprintf("%s://%s:%d/api/stars/%d/image", protocol, publicHost, port, starID), nil
 }
 
 func (m *MinioClient) DeleteImage(starID int) error {

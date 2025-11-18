@@ -1,5 +1,11 @@
 ServiceHost = "0.0.0.0"
 ServicePort = 8080
+ServiceProtocol = "https"
+ServicePublicHost = "172.20.10.4"
+
+# SSL/TLS сертификаты
+TLSCertFile = "certs/cert.crt"
+TLSKeyFile = "certs/cert.key"
 
 SecretKey = "your-super-secret-jwt-key-change-in-production"
 ExpiresIn = "24h"

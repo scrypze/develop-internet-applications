@@ -23,7 +23,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	router.Use(h.CORSMiddleware())
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler,
-		ginSwagger.URL("http://localhost:8080/swagger/doc.json"),
+		ginSwagger.URL("https://172.20.10.4:8080/swagger/doc.json"),
 		ginSwagger.DefaultModelsExpandDepth(-1)))
 
 	api := router.Group("/api")

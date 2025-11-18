@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"os"
@@ -46,7 +47,7 @@ func NewApp() *Application {
 	// 	logrus.Fatalf("failed to sync sequences: %v", err)
 	// }
 
-	minioClient, err := pkg.NewMinioClient()
+	minioClient, err := pkg.NewMinioClient(conf)
 	if err != nil {
 		logrus.Fatalf("failed to create minio client: %v", err)
 	}
@@ -79,12 +80,43 @@ func (a *Application) RunApp() {
 		Handler: a.Router,
 	}
 
+	// Настройка HTTPS если протокол https и указаны сертификаты
+	useHTTPS := false
+	if a.Config.ServiceProtocol == "https" && a.Config.TLSCertFile != "" && a.Config.TLSKeyFile != "" {
+		// Проверяем существование файлов сертификатов
+		if _, err := os.Stat(a.Config.TLSCertFile); os.IsNotExist(err) {
+			logrus.Warnf("TLS certificate file not found: %s, falling back to HTTP", a.Config.TLSCertFile)
+		} else if _, err := os.Stat(a.Config.TLSKeyFile); os.IsNotExist(err) {
+			logrus.Warnf("TLS key file not found: %s, falling back to HTTP", a.Config.TLSKeyFile)
+		} else {
+			// Загружаем сертификаты
+			cert, err := tls.LoadX509KeyPair(a.Config.TLSCertFile, a.Config.TLSKeyFile)
+			if err != nil {
+				logrus.Fatalf("Failed to load TLS certificates: %v", err)
+			}
+
+			server.TLSConfig = &tls.Config{
+				Certificates: []tls.Certificate{cert},
+			}
+			useHTTPS = true
+		}
+	}
+
+	// Запускаем сервер
 	go func() {
-		logrus.Println("Service started")
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logrus.Fatalf("Server error: %v", err)
+		if useHTTPS {
+			logrus.Printf("Service started with HTTPS on %s", serverAddress)
+			if err := server.ListenAndServeTLS(a.Config.TLSCertFile, a.Config.TLSKeyFile); err != nil && err != http.ErrServerClosed {
+				logrus.Fatalf("Server error: %v", err)
+			}
+		} else {
+			logrus.Printf("Service started with HTTP on %s", serverAddress)
+			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				logrus.Fatalf("Server error: %v", err)
+			}
 		}
 	}()
+
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit

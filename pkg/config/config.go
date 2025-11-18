@@ -10,8 +10,13 @@ import (
 )
 
 type Config struct {
-	ServiceHost string
-	ServicePort int
+	ServiceHost       string
+	ServicePort       int
+	ServiceProtocol   string
+	ServicePublicHost string
+
+	TLSCertFile string
+	TLSKeyFile  string
 
 	JWT   JWTConfig
 	Redis RedisConfig
@@ -64,6 +69,12 @@ func NewConfig() (*Config, error) {
 	}
 	if cfg.ReadTimeout == 0 {
 		cfg.ReadTimeout = 3 * time.Second
+	}
+	if cfg.ServiceProtocol == "" {
+		cfg.ServiceProtocol = "https"
+	}
+	if cfg.ServicePublicHost == "" {
+		cfg.ServicePublicHost = "172.20.10.4"
 	}
 
 	cfgRedis, err := ConfRedis(cfg.DialTimeout, cfg.ReadTimeout)
