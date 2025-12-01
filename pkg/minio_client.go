@@ -34,7 +34,7 @@ func (m *MinioClient) UploadImage(star string, file io.Reader, fileSize int64, f
 		return "", err
 	}
 
-	return fmt.Sprintf("http://localhost:9000/stars/%s", objectName), nil
+	return fmt.Sprintf("https://172.20.10.4:8443/stars/%s", objectName), nil
 }
 
 func (m *MinioClient) DeleteImage(starID int) error {

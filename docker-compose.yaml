@@ -52,9 +52,14 @@ services:
     hostname: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-selfsigned.crt:/etc/nginx/ssl/nginx-selfsigned.crt:ro
+      - ./nginx-selfsigned.key:/etc/nginx/ssl/nginx-selfsigned.key:ro
     ports:
       - "9000:9000"
       - "9001:9001"
+      - "8443:8443"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - minio1
       - minio2
