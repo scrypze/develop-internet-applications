@@ -50,18 +50,19 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 		model.Star
 		ProbableNumberOfPlanets float32 `json:"probable_number_of_planets"`
 		HabitableZone           string  `json:"habitable_zone"`
+		Comment                 string  `json:"comment"`
 	}
 
 	type SelectedStarsBase struct {
-		ID             int        `json:"ID"`
-		Status         string     `json:"Status"`
-		CreatedAt      time.Time  `json:"CreatedAt"`
-		FormedAt       time.Time  `json:"FormedAt"`
-		CompletedAt    time.Time  `json:"CompletedAt"`
-		CreatorID      uuid.UUID  `json:"CreatorID"`
-		ModeratorID    *uuid.UUID `json:"ModeratorID"`
-		Date           time.Time  `json:"Date"`
-		Scientist      string     `json:"Scientist"`
+		ID          int        `json:"ID"`
+		Status      string     `json:"Status"`
+		CreatedAt   time.Time  `json:"CreatedAt"`
+		FormedAt    time.Time  `json:"FormedAt"`
+		CompletedAt time.Time  `json:"CompletedAt"`
+		CreatorID   uuid.UUID  `json:"CreatorID"`
+		ModeratorID *uuid.UUID `json:"ModeratorID"`
+		Date        time.Time  `json:"Date"`
+		Scientist   string     `json:"Scientist"`
 		//CreatorLogin   string     `json:"creator_login"`
 		//ModeratorLogin *string    `json:"moderator_login"`
 	}
@@ -78,6 +79,7 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 			Star:                    s,
 			ProbableNumberOfPlanets: calc.ProbableNumberOfPlanets,
 			HabitableZone:           calc.HabitableZone,
+			Comment:                 calc.Comment,
 		})
 	}
 
@@ -87,15 +89,15 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 	// 	modLogin = &ml
 	// }
 	base := SelectedStarsBase{
-		ID:             selectedStars.ID,
-		Status:         selectedStars.Status,
-		CreatedAt:      selectedStars.CreatedAt,
-		FormedAt:       selectedStars.FormedAt,
-		CompletedAt:    selectedStars.CompletedAt,
-		CreatorID:      selectedStars.CreatorID,
-		ModeratorID:    selectedStars.ModeratorID,
-		Date:           selectedStars.Date,
-		Scientist:      selectedStars.Scientist,
+		ID:          selectedStars.ID,
+		Status:      selectedStars.Status,
+		CreatedAt:   selectedStars.CreatedAt,
+		FormedAt:    selectedStars.FormedAt,
+		CompletedAt: selectedStars.CompletedAt,
+		CreatorID:   selectedStars.CreatorID,
+		ModeratorID: selectedStars.ModeratorID,
+		Date:        selectedStars.Date,
+		Scientist:   selectedStars.Scientist,
 		//CreatorLogin:   selectedStars.Creator.Login,
 		//ModeratorLogin: modLogin,
 	}
@@ -124,6 +126,18 @@ func (h *Handler) GetSelectedStarsByID(ctx *gin.Context) {
 // @Failure 500 {object} map[string]interface{}
 // @Router /selected-stars/add-star/{id} [post]
 func (h *Handler) AddStarToSelected(ctx *gin.Context) {
+	userUUID, exists := ctx.Get("user_uuid")
+	if !exists {
+		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("user not authenticated"))
+		return
+	}
+
+	creatorID, ok := userUUID.(uuid.UUID)
+	if !ok {
+		h.errorHandler(ctx, http.StatusInternalServerError, fmt.Errorf("invalid user UUID"))
+		return
+	}
+
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
 
@@ -132,7 +146,7 @@ func (h *Handler) AddStarToSelected(ctx *gin.Context) {
 		return
 	}
 
-	err = h.service.AddStarIntoSelectedStars(id)
+	err = h.service.AddStarIntoSelectedStars(id, creatorID)
 
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
@@ -186,15 +200,25 @@ func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 // @Failure 500 {object} map[string]interface{}
 // @Router /selected-stars/count [get]
 func (h *Handler) GetSelectedStarsCount(ctx *gin.Context) {
-	creatorID := 1
+	userUUID, exists := ctx.Get("user_uuid")
+	if !exists {
+		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("user not authenticated"))
+		return
+	}
 
-	draftID, err := h.service.GetCurrentDraftID(uint(creatorID))
+	creatorID, ok := userUUID.(uuid.UUID)
+	if !ok {
+		h.errorHandler(ctx, http.StatusInternalServerError, fmt.Errorf("invalid user UUID"))
+		return
+	}
+
+	draftID, err := h.service.GetCurrentDraftIDByUUID(creatorID)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
 	}
 
-	count := h.service.GetSelectedStarsCount()
+	count := h.service.GetSelectedStarsCount(creatorID)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"selected_stars_id": draftID,
@@ -221,7 +245,27 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	dateTo := ctx.Query("date_to")
 	status := ctx.Query("status")
 
-	lists, err := h.service.GetSelectedStarsFiltered(dateFrom, dateTo, status)
+	userUUID, exists := ctx.Get("user_uuid")
+	if !exists {
+		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("user not authenticated"))
+		return
+	}
+
+	creatorID, ok := userUUID.(uuid.UUID)
+	if !ok {
+		h.errorHandler(ctx, http.StatusInternalServerError, fmt.Errorf("invalid user UUID"))
+		return
+	}
+
+	user, err := h.service.GetUserByID(creatorID)
+	if err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	fmt.Printf("GetSelectedStars - user UUID: %s, login: %s, role: %d (Astronomer=%d)\n", user.UUID, user.Login, user.Role, model.Astronomer)
+
+	lists, err := h.service.GetSelectedStarsFiltered(dateFrom, dateTo, status, creatorID, user.Role)
 	if err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
@@ -281,7 +325,20 @@ func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
 		return
 	}
-	if err := h.service.RemoveStarFromSelected(starID); err != nil {
+
+	userUUID, exists := ctx.Get("user_uuid")
+	if !exists {
+		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("user not authenticated"))
+		return
+	}
+
+	creatorID, ok := userUUID.(uuid.UUID)
+	if !ok {
+		h.errorHandler(ctx, http.StatusInternalServerError, fmt.Errorf("invalid user UUID"))
+		return
+	}
+
+	if err := h.service.RemoveStarFromSelected(starID, creatorID); err != nil {
 		h.errorHandler(ctx, http.StatusInternalServerError, err)
 		return
 	}
@@ -300,7 +357,17 @@ func (h *Handler) RemoveStarFromSelected(ctx *gin.Context) {
 // @Failure 500 {object} map[string]interface{}
 // @Router /selected-stars [post]
 func (h *Handler) CreateDraftSelectedStars(ctx *gin.Context) {
-	creatorID, _ := uuid.Parse("b57f6d40-23a8-4e8c-9a14-1d2d2fa68a6b")
+	userUUID, exists := ctx.Get("user_uuid")
+	if !exists {
+		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("user not authenticated"))
+		return
+	}
+
+	creatorID, ok := userUUID.(uuid.UUID)
+	if !ok {
+		h.errorHandler(ctx, http.StatusInternalServerError, fmt.Errorf("invalid user UUID"))
+		return
+	}
 
 	draft, err := h.service.CreateDraftSelectedStars(creatorID)
 	if err != nil {
@@ -413,8 +480,8 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 	}
 
 	var payload struct {
-		Action      string `json:"action"`
-		ModeratorID uuid.UUID    `json:"moderator_id"`
+		Action      string    `json:"action"`
+		ModeratorID uuid.UUID `json:"moderator_id"`
 	}
 	if err := ctx.BindJSON(&payload); err != nil {
 		h.errorHandler(ctx, http.StatusBadRequest, err)
@@ -447,6 +514,7 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 		model.Star
 		ProbableNumberOfPlanets float32 `json:"probable_number_of_planets"`
 		HabitableZone           string  `json:"habitable_zone"`
+		Comment                 string  `json:"comment"`
 	}
 
 	type SelectedStarsBase struct {
@@ -475,6 +543,7 @@ func (h *Handler) ModerateSelectedStars(ctx *gin.Context) {
 			Star:                    s,
 			ProbableNumberOfPlanets: calc.ProbableNumberOfPlanets,
 			HabitableZone:           calc.HabitableZone,
+			Comment:                 calc.Comment,
 		})
 	}
 

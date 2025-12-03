@@ -27,12 +27,13 @@ type Star interface {
 type SelectedStars interface {
 	GetSelectedStars() ([]model.SelectedStars, error)
 	GetSelectedStarsByID(id int) (model.SelectedStars, error)
-	GetSelectedStarsCount() int64
+	GetSelectedStarsCount(creatorID uuid.UUID) int64
 	DeleteSelectedStars(selectedStarsID int) error
 	GetCurrentDraftID(creatorID uint) (int, error)
-	AddStarIntoSelectedStars(starID int) error
+	GetCurrentDraftIDByUUID(creatorUUID uuid.UUID) (int, error)
+	AddStarIntoSelectedStars(starID int, creatorID uuid.UUID) error
 	GetCalculateExoplanetsBySelectedStarsID(selectedStarsID int) (map[int]model.CalculateExoplanets, error)
-	GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error)
+	GetSelectedStarsFiltered(dateFrom, dateTo string, status string, creatorID uuid.UUID, role model.Role) ([]model.SelectedStars, error)
 	UpdateSelectedStars(id int, date string, scientist string) error
 	FormSelectedStars(id int) error
 	CreateDraftSelectedStars(creatorID uuid.UUID) (model.SelectedStars, error)
@@ -41,7 +42,7 @@ type SelectedStars interface {
 
 type CalculateExoplanets interface {
 	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
-	RemoveStarFromSelected(starID int) error
+	RemoveStarFromSelected(starID int, creatorID uuid.UUID) error
 }
 
 type Users interface {

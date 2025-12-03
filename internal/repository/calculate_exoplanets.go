@@ -3,6 +3,7 @@ package repository
 import (
 	"develop-internet-applications/internal/model"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -37,8 +38,7 @@ func (r *SelectedStarsPostgres) GetCalculateExoplanetsBySelectedStarsID(selected
 	return result, nil
 }
 
-func (r *CalculateExoplanetsPostgres) RemoveStarFromSelected(starID int) error {
-	creatorID := 1
+func (r *CalculateExoplanetsPostgres) RemoveStarFromSelected(starID int, creatorID uuid.UUID) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		var draft model.SelectedStars
 		if err := tx.Where("creator_id = ? AND status = ?", creatorID, "draft").Order("id DESC").Limit(1).Find(&draft).Error; err != nil {

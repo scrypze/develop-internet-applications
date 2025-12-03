@@ -198,6 +198,14 @@ func (s *AuthService) RegisterAstronomer(login, password string) error {
 	return nil
 }
 
+func (s *AuthService) HashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", fmt.Errorf("failed to hash password: %w", err)
+	}
+	return string(hashedPassword), nil
+}
+
 func (s *AuthService) Logout(tokenStr string) error {
 	token, err := jwt.ParseWithClaims(tokenStr, &model.JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.config.JWT.SecretKey), nil

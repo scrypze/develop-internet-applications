@@ -53,12 +53,20 @@ func (r *SelectedStarsPostgres) GetSelectedStarsByID(id int) (model.SelectedStar
 	return list, nil
 }
 
-func (r *SelectedStarsPostgres) GetSelectedStarsFiltered(dateFrom, dateTo string, status string) ([]model.SelectedStars, error) {
+func (r *SelectedStarsPostgres) GetSelectedStarsFiltered(dateFrom, dateTo string, status string, creatorID uuid.UUID, role model.Role) ([]model.SelectedStars, error) {
 	var lists []model.SelectedStars
 
 	q := r.db.Preload("Creator").Preload("Moderator").Preload("SelectedStarsItems").Model(&model.SelectedStars{})
 
 	q = q.Where("status NOT IN (?)", []string{"draft", "is_delete"})
+
+	fmt.Printf("GetSelectedStarsFiltered - role: %d, Astronomer: %d, creatorID: %s\n", role, model.Astronomer, creatorID)
+	if role != model.Astronomer {
+		fmt.Printf("Filtering by creator_id: %s\n", creatorID)
+		q = q.Where("creator_id = ?", creatorID)
+	} else {
+		fmt.Printf("Astronomer - returning all applications\n")
+	}
 
 	if status != "" {
 		q = q.Where("status = ?", status)
@@ -73,13 +81,13 @@ func (r *SelectedStarsPostgres) GetSelectedStarsFiltered(dateFrom, dateTo string
 	if err := q.Order("id DESC").Find(&lists).Error; err != nil {
 		return nil, err
 	}
+	fmt.Printf("GetSelectedStarsFiltered - found %d applications\n", len(lists))
 	return lists, nil
 }
 
-func (r *SelectedStarsPostgres) GetSelectedStarsCount() int64 {
+func (r *SelectedStarsPostgres) GetSelectedStarsCount(creatorID uuid.UUID) int64 {
 	var selectedStarsID int
 	var count int64
-	creatorID := 1
 
 	err := r.db.Model(&model.SelectedStars{}).
 		Where("creator_id = ? AND status = ?", creatorID, "draft").
@@ -125,6 +133,22 @@ func (r *SelectedStarsPostgres) GetCurrentDraftID(creatorID uint) (int, error) {
 
 	err := r.db.Model(&model.SelectedStars{}).
 		Where("creator_id = ? AND status = ?", creatorID, "draft").
+		Order("id DESC").
+		Select("id").
+		Pluck("id", &id).Error
+
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func (r *SelectedStarsPostgres) GetCurrentDraftIDByUUID(creatorUUID uuid.UUID) (int, error) {
+	var id int
+
+	err := r.db.Model(&model.SelectedStars{}).
+		Where("creator_id = ? AND status = ?", creatorUUID, "draft").
 		Order("id DESC").
 		Select("id").
 		Pluck("id", &id).Error
@@ -185,26 +209,28 @@ func (r *SelectedStarsPostgres) ModerateSelectedStars(id int, moderatorID uuid.U
 		return fmt.Errorf("moderator not found")
 	}
 
-	var items []model.CalculateExoplanets
-	if err := r.db.Where("selected_stars_id = ?", id).Find(&items).Error; err != nil {
-		return err
-	}
-	for _, it := range items {
-		var star model.Star
-		if err := r.db.First(&star, it.StarID).Error; err != nil {
-			continue
+	if action == "complete" {
+		var items []model.CalculateExoplanets
+		if err := r.db.Where("selected_stars_id = ?", id).Find(&items).Error; err != nil {
+			return err
 		}
-		rin, rout, nPlanets, calcErr := estimateHZAndPlanets(star)
-		if calcErr != nil {
-			continue
+		for _, it := range items {
+			var star model.Star
+			if err := r.db.First(&star, it.StarID).Error; err != nil {
+				continue
+			}
+			rin, rout, nPlanets, calcErr := estimateHZAndPlanets(star)
+			if calcErr != nil {
+				continue
+			}
+			hz := fmt.Sprintf("%.2f-%.2f a.e.", rin, rout)
+			_ = r.db.Model(&model.CalculateExoplanets{}).
+				Where("selected_stars_id = ? AND star_id = ?", id, it.StarID).
+				Updates(map[string]interface{}{
+					"habitable_zone":             hz,
+					"probable_number_of_planets": float32(math.Round(nPlanets)),
+				}).Error
 		}
-		hz := fmt.Sprintf("%.2f-%.2f a.e.", rin, rout)
-		_ = r.db.Model(&model.CalculateExoplanets{}).
-			Where("selected_stars_id = ? AND star_id = ?", id, it.StarID).
-			Updates(map[string]interface{}{
-				"habitable_zone":             hz,
-				"probable_number_of_planets": float32(math.Round(nPlanets)),
-			}).Error
 	}
 
 	return r.db.Model(&model.SelectedStars{}).
@@ -216,9 +242,7 @@ func (r *SelectedStarsPostgres) ModerateSelectedStars(id int, moderatorID uuid.U
 		}).Error
 }
 
-func (r *SelectedStarsPostgres) AddStarIntoSelectedStars(starID int) error {
-	creatorID, _ := uuid.Parse("b57f6d40-23a8-4e8c-9a14-1d2d2fa68a6b")
-
+func (r *SelectedStarsPostgres) AddStarIntoSelectedStars(starID int, creatorID uuid.UUID) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		var draft model.SelectedStars
 

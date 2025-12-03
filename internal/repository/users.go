@@ -39,5 +39,5 @@ func (r *UsersPostgres) UpdateUser(uuid uuid.UUID, fields map[string]interface{}
 	if len(fields) == 0 {
 		return nil
 	}
-	return r.db.Model(&model.Users{}).Where("id = ?", uuid).Updates(fields).Error
+	return r.db.Model(&model.Users{}).Where("uuid = ?", uuid).Updates(fields).Error
 }

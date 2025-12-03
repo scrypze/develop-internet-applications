@@ -37,8 +37,10 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	protectedAuth := api.Group("/auth")
 	{
-		protectedAuth.Use(h.WithAuthCheck()).GET("/me", h.Me)
-		protectedAuth.Use(h.WithAuthCheck()).POST("/logout", h.Logout)
+		protectedAuth.GET("/me", h.WithAuthCheck(), h.Me)
+		protectedAuth.POST("/logout", h.WithAuthCheck(), h.Logout)
+		protectedAuth.PUT("/update-login", h.WithAuthCheck(), h.UpdateLogin)
+		protectedAuth.PUT("/update-password", h.WithAuthCheck(), h.UpdatePassword)
 	}
 
 	stars := api.Group("/stars")
@@ -53,10 +55,10 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	protectedStars := api.Group("/stars")
 	{
-		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).POST("", h.CreateStar)
-		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).PUT("/:id", h.UpdateStar)
-		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).DELETE("/:id", h.DeleteStar)
-		protectedStars.Use(h.WithAuthCheck(model.Astronomer)).POST("/:id/image", h.UploadStarImage)
+		protectedStars.POST("", h.WithAuthCheck(model.Astronomer), h.CreateStar)
+		protectedStars.PUT("/:id", h.WithAuthCheck(model.Astronomer), h.UpdateStar)
+		protectedStars.DELETE("/:id", h.WithAuthCheck(model.Astronomer), h.DeleteStar)
+		protectedStars.POST("/:id/image", h.WithAuthCheck(model.Astronomer), h.UploadStarImage)
 	}
 
 	// selectedStars := api.Group("/selected-stars")
@@ -75,16 +77,16 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	protectedSelectedStars := api.Group("/selected-stars")
 	{
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).POST("", h.CreateDraftSelectedStars)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).GET("/:id", h.GetSelectedStarsByID)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).DELETE("/:id", h.DeleteSelectedStars)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).POST("/add-star/:id", h.AddStarToSelected)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).POST("/delete-selected-stars/:id", h.DeleteSelectedStars)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Astronomer)).GET("", h.GetSelectedStars)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).GET("/count", h.GetSelectedStarsCount)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).PUT("/:id", h.UpdateSelectedStars)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Client, model.Astronomer)).PUT("/:id/form", h.FormSelectedStars)
-		protectedSelectedStars.Use(h.WithAuthCheck(model.Astronomer)).PUT("/:id/moderate", h.ModerateSelectedStars)
+		protectedSelectedStars.POST("", h.WithAuthCheck(model.Client, model.Astronomer), h.CreateDraftSelectedStars)
+		protectedSelectedStars.GET("/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.GetSelectedStarsByID)
+		protectedSelectedStars.DELETE("/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.DeleteSelectedStars)
+		protectedSelectedStars.POST("/add-star/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.AddStarToSelected)
+		protectedSelectedStars.POST("/delete-selected-stars/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.DeleteSelectedStars)
+		protectedSelectedStars.GET("", h.WithAuthCheck(model.Client, model.Astronomer), h.GetSelectedStars)
+		protectedSelectedStars.GET("/count", h.WithAuthCheck(model.Client, model.Astronomer), h.GetSelectedStarsCount)
+		protectedSelectedStars.PUT("/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.UpdateSelectedStars)
+		protectedSelectedStars.PUT("/:id/form", h.WithAuthCheck(model.Client, model.Astronomer), h.FormSelectedStars)
+		protectedSelectedStars.PUT("/:id/moderate", h.WithAuthCheck(model.Astronomer), h.ModerateSelectedStars)
 	}
 
 	// calculateExoplanets := api.Group("/calculate-exoplanets")
@@ -95,8 +97,8 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 
 	protectedCalculateExoplanets := api.Group("calculate-exoplanets")
 	{
-		protectedCalculateExoplanets.Use(h.WithAuthCheck(model.Client, model.Astronomer)).PUT("/updateStarComment", h.UpdateCalculateExoplanetsComment)
-		protectedCalculateExoplanets.Use(h.WithAuthCheck(model.Client, model.Astronomer)).DELETE("/remove-star/:id", h.RemoveStarFromSelected)
+		protectedCalculateExoplanets.PUT("/updateStarComment", h.WithAuthCheck(model.Client, model.Astronomer), h.UpdateCalculateExoplanetsComment)
+		protectedCalculateExoplanets.DELETE("/remove-star/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.RemoveStarFromSelected)
 	}
 }
 

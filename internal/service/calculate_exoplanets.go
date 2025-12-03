@@ -2,6 +2,8 @@ package service
 
 import (
 	"develop-internet-applications/internal/repository"
+
+	"github.com/google/uuid"
 )
 
 type CalculateExoplanetsService struct {
@@ -16,6 +18,6 @@ func (s *CalculateExoplanetsService) UpdateCalculateExoplanetsComment(selectedSt
 	return s.repo.UpdateCalculateExoplanetsComment(selectedStarsID, starID, comment)
 }
 
-func (s *CalculateExoplanetsService) RemoveStarFromSelected(starID int) error {
-	return s.repo.RemoveStarFromSelected(starID)
+func (s *CalculateExoplanetsService) RemoveStarFromSelected(starID int, creatorID uuid.UUID) error {
+	return s.repo.RemoveStarFromSelected(starID, creatorID)
 }
