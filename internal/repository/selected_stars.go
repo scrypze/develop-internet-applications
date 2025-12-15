@@ -210,26 +210,26 @@ func (r *SelectedStarsPostgres) ModerateSelectedStars(id int, moderatorID uuid.U
 	}
 
 	if action == "complete" {
-		var items []model.CalculateExoplanets
-		if err := r.db.Where("selected_stars_id = ?", id).Find(&items).Error; err != nil {
-			return err
+	var items []model.CalculateExoplanets
+	if err := r.db.Where("selected_stars_id = ?", id).Find(&items).Error; err != nil {
+		return err
+	}
+	for _, it := range items {
+		var star model.Star
+		if err := r.db.First(&star, it.StarID).Error; err != nil {
+			continue
 		}
-		for _, it := range items {
-			var star model.Star
-			if err := r.db.First(&star, it.StarID).Error; err != nil {
-				continue
-			}
-			rin, rout, nPlanets, calcErr := estimateHZAndPlanets(star)
-			if calcErr != nil {
-				continue
-			}
-			hz := fmt.Sprintf("%.2f-%.2f a.e.", rin, rout)
-			_ = r.db.Model(&model.CalculateExoplanets{}).
-				Where("selected_stars_id = ? AND star_id = ?", id, it.StarID).
-				Updates(map[string]interface{}{
-					"habitable_zone":             hz,
-					"probable_number_of_planets": float32(math.Round(nPlanets)),
-				}).Error
+		rin, rout, nPlanets, calcErr := estimateHZAndPlanets(star)
+		if calcErr != nil {
+			continue
+		}
+		hz := fmt.Sprintf("%.2f-%.2f a.e.", rin, rout)
+		_ = r.db.Model(&model.CalculateExoplanets{}).
+			Where("selected_stars_id = ? AND star_id = ?", id, it.StarID).
+			Updates(map[string]interface{}{
+				"habitable_zone":             hz,
+				"probable_number_of_planets": float32(math.Round(nPlanets)),
+			}).Error
 		}
 	}
 

@@ -1,13 +1,13 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"develop-internet-applications/internal/model"
-
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -190,27 +190,37 @@ func (h *Handler) DeleteSelectedStars(ctx *gin.Context) {
 
 // GetSelectedStarsCount godoc
 // @Summary Получение количества звезд в текущей заявке
-// @Description Возвращает ID текущей черновой заявки и количество звезд в ней
+// @Description Возвращает ID текущей черновой заявки и количество звезд в ней. Если пользователь не авторизован, возвращает -1
 // @Tags SelectedStars
 // @Accept json
 // @Produce json
-// @Security BearerAuth
 // @Success 200 {object} map[string]interface{}
-// @Failure 401 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
 // @Router /selected-stars/count [get]
 func (h *Handler) GetSelectedStarsCount(ctx *gin.Context) {
-	userUUID, exists := ctx.Get("user_uuid")
-	if !exists {
-		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("user not authenticated"))
+	jwtStr := ctx.GetHeader("Authorization")
+	
+	// Если токен отсутствует или невалиден, возвращаем -1
+	if jwtStr == "" || !strings.HasPrefix(jwtStr, model.JwtPrefix) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"selected_stars_id": -1,
+			"count":             -1,
+		})
 		return
 	}
 
-	creatorID, ok := userUUID.(uuid.UUID)
-	if !ok {
-		h.errorHandler(ctx, http.StatusInternalServerError, fmt.Errorf("invalid user UUID"))
+	jwtStr = jwtStr[len(model.JwtPrefix):]
+	uuid, err := h.service.ValidateToken(jwtStr)
+	if err != nil {
+		// Если токен невалиден, возвращаем -1
+		ctx.JSON(http.StatusOK, gin.H{
+			"selected_stars_id": -1,
+			"count":             -1,
+		})
 		return
 	}
+
+	creatorID := uuid
 
 	draftID, err := h.service.GetCurrentDraftIDByUUID(creatorID)
 	if err != nil {

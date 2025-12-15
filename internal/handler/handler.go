@@ -83,7 +83,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 		protectedSelectedStars.POST("/add-star/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.AddStarToSelected)
 		protectedSelectedStars.POST("/delete-selected-stars/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.DeleteSelectedStars)
 		protectedSelectedStars.GET("", h.WithAuthCheck(model.Client, model.Astronomer), h.GetSelectedStars)
-		protectedSelectedStars.GET("/count", h.WithAuthCheck(model.Client, model.Astronomer), h.GetSelectedStarsCount)
+		protectedSelectedStars.GET("/count", h.GetSelectedStarsCount)
 		protectedSelectedStars.PUT("/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.UpdateSelectedStars)
 		protectedSelectedStars.PUT("/:id/form", h.WithAuthCheck(model.Client, model.Astronomer), h.FormSelectedStars)
 		protectedSelectedStars.PUT("/:id/moderate", h.WithAuthCheck(model.Astronomer), h.ModerateSelectedStars)
