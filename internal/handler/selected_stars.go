@@ -284,6 +284,7 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	type Row struct {
 		ID         int     `json:"id"`
 		Status     string  `json:"status"`
+		Date       string  `json:"date"`
 		FormedAt   string  `json:"formed_at"`
 		Creator    string  `json:"creator_login"`
 		Moderator  *string `json:"moderator_login"`
@@ -301,6 +302,7 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 		row := Row{
 			ID:         l.ID,
 			Status:     l.Status,
+			Date:       l.Date.Format("2006-01-02"),
 			FormedAt:   l.FormedAt.Format("2006-01-02"),
 			Creator:    l.Creator.Login,
 			Moderator:  modLogin,
