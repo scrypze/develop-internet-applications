@@ -21,3 +21,11 @@ func (s *CalculateExoplanetsService) UpdateCalculateExoplanetsComment(selectedSt
 func (s *CalculateExoplanetsService) RemoveStarFromSelected(starID int, creatorID uuid.UUID) error {
 	return s.repo.RemoveStarFromSelected(starID, creatorID)
 }
+
+func (s *CalculateExoplanetsService) UpdateCalculateExoplanetsResult(selectedStarsID int, starID int, habitableZone string, probableNumberOfPlanets float32) error {
+	return s.repo.UpdateCalculateExoplanetsResult(selectedStarsID, starID, habitableZone, probableNumberOfPlanets)
+}
+
+func (s *CalculateExoplanetsService) GetCalculatedCount(selectedStarsID int) (int64, error) {
+	return s.repo.GetCalculatedCount(selectedStarsID)
+}

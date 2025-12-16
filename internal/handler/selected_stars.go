@@ -282,14 +282,15 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 	}
 
 	type Row struct {
-		ID         int     `json:"id"`
-		Status     string  `json:"status"`
-		Date       string  `json:"date"`
-		FormedAt   string  `json:"formed_at"`
-		Creator    string  `json:"creator_login"`
-		Moderator  *string `json:"moderator_login"`
-		Scientist  string  `json:"scientist"`
-		ItemsCount int     `json:"items_count"`
+		ID                int     `json:"id"`
+		Status            string  `json:"status"`
+		Date              string  `json:"date"`
+		FormedAt          string  `json:"formed_at"`
+		Creator           string  `json:"creator_login"`
+		Moderator         *string `json:"moderator_login"`
+		Scientist         string  `json:"scientist"`
+		ItemsCount        int     `json:"items_count"`
+		CalculatedCount   int64   `json:"calculated_count"`
 	}
 
 	resp := make([]Row, 0, len(lists))
@@ -299,15 +300,22 @@ func (h *Handler) GetSelectedStars(ctx *gin.Context) {
 			ml := l.Moderator.Login
 			modLogin = &ml
 		}
+		
+		calculatedCount, err := h.service.GetCalculatedCount(l.ID)
+		if err != nil {
+			calculatedCount = 0
+		}
+		
 		row := Row{
-			ID:         l.ID,
-			Status:     l.Status,
-			Date:       l.Date.Format("2006-01-02"),
-			FormedAt:   l.FormedAt.Format("2006-01-02"),
-			Creator:    l.Creator.Login,
-			Moderator:  modLogin,
-			Scientist:  l.Scientist,
-			ItemsCount: len(l.SelectedStarsItems),
+			ID:              l.ID,
+			Status:          l.Status,
+			Date:            l.Date.Format("2006-01-02"),
+			FormedAt:        l.FormedAt.Format("2006-01-02"),
+			Creator:         l.Creator.Login,
+			Moderator:       modLogin,
+			Scientist:       l.Scientist,
+			ItemsCount:      len(l.SelectedStarsItems),
+			CalculatedCount: calculatedCount,
 		}
 		resp = append(resp, row)
 	}

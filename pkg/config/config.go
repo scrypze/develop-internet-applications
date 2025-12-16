@@ -18,6 +18,9 @@ type Config struct {
 
 	DialTimeout time.Duration
 	ReadTimeout time.Duration
+
+	ComputingServiceURL   string
+	ComputingServiceToken string
 }
 
 type JWTConfig struct {

@@ -43,6 +43,8 @@ type SelectedStars interface {
 type CalculateExoplanets interface {
 	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
 	RemoveStarFromSelected(starID int, creatorID uuid.UUID) error
+	UpdateCalculateExoplanetsResult(selectedStarsID int, starID int, habitableZone string, probableNumberOfPlanets float32) error
+	GetCalculatedCount(selectedStarsID int) (int64, error)
 }
 
 type Users interface {

@@ -59,7 +59,7 @@ func NewApp() *Application {
 
 	repository := repository.NewRepository(db)
 	service := service.NewService(repository, minioClient, redisClient, conf)
-	handler := handler.NewHandler(service)
+	handler := handler.NewHandler(service, conf)
 	router := gin.Default()
 
 	return &Application{

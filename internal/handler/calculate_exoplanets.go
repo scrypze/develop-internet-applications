@@ -51,3 +51,47 @@ func (h *Handler) UpdateCalculateExoplanetsComment(ctx *gin.Context) {
 	}
 	ctx.Status(http.StatusOK)
 }
+
+// UpdateCalculateExoplanetsResult godoc
+// @Summary Обновление результата расчета экзопланет
+// @Description Обновляет результат расчета для конкретной звезды в заявке (вызывается асинхронным сервисом)
+// @Tags CalculateExoplanets
+// @Accept json
+// @Produce json
+// @Param input body map[string]interface{} true "Данные результата"
+// @Success 200
+// @Failure 400 {object} map[string]interface{}
+// @Failure 401 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /calculate-exoplanets/update-result [post]
+func (h *Handler) UpdateCalculateExoplanetsResult(ctx *gin.Context) {
+	token := ctx.GetHeader("X-Service-Token")
+	expectedToken := h.config.ComputingServiceToken
+	if token != expectedToken {
+		h.errorHandler(ctx, http.StatusUnauthorized, fmt.Errorf("invalid service token"))
+		return
+	}
+
+	var payload struct {
+		SelectedStarsID         int     `json:"selected_stars_id"`
+		StarID                  int     `json:"star_id"`
+		HabitableZone           string  `json:"habitable_zone"`
+		ProbableNumberOfPlanets float32 `json:"probable_number_of_planets"`
+	}
+	if err := ctx.BindJSON(&payload); err != nil {
+		h.errorHandler(ctx, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.service.UpdateCalculateExoplanetsResult(
+		payload.SelectedStarsID,
+		payload.StarID,
+		payload.HabitableZone,
+		payload.ProbableNumberOfPlanets,
+	); err != nil {
+		h.errorHandler(ctx, http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
+}

@@ -3,6 +3,7 @@ package handler
 import (
 	"develop-internet-applications/internal/model"
 	"develop-internet-applications/internal/service"
+	"develop-internet-applications/pkg/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -13,10 +14,11 @@ import (
 
 type Handler struct {
 	service *service.Service
+	config  *config.Config
 }
 
-func NewHandler(service *service.Service) *Handler {
-	return &Handler{service: service}
+func NewHandler(service *service.Service, cfg *config.Config) *Handler {
+	return &Handler{service: service, config: cfg}
 }
 
 func (h *Handler) RegisterHandler(router *gin.Engine) {
@@ -99,6 +101,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	{
 		protectedCalculateExoplanets.PUT("/updateStarComment", h.WithAuthCheck(model.Client, model.Astronomer), h.UpdateCalculateExoplanetsComment)
 		protectedCalculateExoplanets.DELETE("/remove-star/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.RemoveStarFromSelected)
+		protectedCalculateExoplanets.POST("/update-result", h.UpdateCalculateExoplanetsResult)
 	}
 }
 

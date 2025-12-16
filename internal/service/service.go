@@ -46,6 +46,8 @@ type SelectedStars interface {
 type CalculateExoplanets interface {
 	UpdateCalculateExoplanetsComment(selectedStarsID int, starID int, comment string) error
 	RemoveStarFromSelected(starID int, creatorID uuid.UUID) error
+	UpdateCalculateExoplanetsResult(selectedStarsID int, starID int, habitableZone string, probableNumberOfPlanets float32) error
+	GetCalculatedCount(selectedStarsID int) (int64, error)
 }
 type Users interface {
 	CreateUser(UUID uuid.UUID, login string, role model.Role, passwordHash string) (model.Users, error)
@@ -65,12 +67,12 @@ type Auth interface {
 	HashPassword(password string) (string, error)
 }
 
-func NewService(repo *repository.Repository, minio *pkg.MinioClient, redis *pkg.RedisClient, config *config.Config) *Service {
+func NewService(repo *repository.Repository, minio *pkg.MinioClient, redis *pkg.RedisClient, cfg *config.Config) *Service {
 	return &Service{
 		Star:                NewStarService(repo.Star, minio),
-		SelectedStars:       NewSelectedStarsService(repo.SelectedStars),
+		SelectedStars:       NewSelectedStarsService(repo.SelectedStars, repo.Star, cfg),
 		CalculateExoplanets: NewCalculateExoplanetsService(repo.CalculateExoplanets),
 		Users:               NewUsersService(repo.Users),
-		Auth:                NewAuthService(repo.Users, redis, config),
+		Auth:                NewAuthService(repo.Users, redis, cfg),
 	}
 }

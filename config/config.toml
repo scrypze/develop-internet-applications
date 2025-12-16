@@ -6,3 +6,6 @@ ExpiresIn = "24h"
 
 DialTimeout = "10s"
 ReadTimeout = "10s"
+
+ComputingServiceURL = "http://localhost:8000"
+ComputingServiceToken = "12345678"

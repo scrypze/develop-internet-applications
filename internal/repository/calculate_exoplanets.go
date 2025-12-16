@@ -56,3 +56,21 @@ func (r *CalculateExoplanetsPostgres) UpdateCalculateExoplanetsComment(selectedS
 		Where("selected_stars_id = ? AND star_id = ?", selectedStarsID, starID).
 		Update("comment", comment).Error
 }
+
+func (r *CalculateExoplanetsPostgres) UpdateCalculateExoplanetsResult(selectedStarsID int, starID int, habitableZone string, probableNumberOfPlanets float32) error {
+	return r.db.Model(&model.CalculateExoplanets{}).
+		Where("selected_stars_id = ? AND star_id = ?", selectedStarsID, starID).
+		Updates(map[string]interface{}{
+			"habitable_zone":             habitableZone,
+			"probable_number_of_planets": probableNumberOfPlanets,
+		}).Error
+}
+
+func (r *CalculateExoplanetsPostgres) GetCalculatedCount(selectedStarsID int) (int64, error) {
+	var count int64
+		
+	err := r.db.Model(&model.CalculateExoplanets{}).
+		Where("selected_stars_id = ? AND habitable_zone != '' AND habitable_zone IS NOT NULL", selectedStarsID).
+		Count(&count).Error
+	return count, err
+}
