@@ -101,7 +101,7 @@ func (h *Handler) RegisterHandler(router *gin.Engine) {
 	{
 		protectedCalculateExoplanets.PUT("/updateStarComment", h.WithAuthCheck(model.Client, model.Astronomer), h.UpdateCalculateExoplanetsComment)
 		protectedCalculateExoplanets.DELETE("/remove-star/:id", h.WithAuthCheck(model.Client, model.Astronomer), h.RemoveStarFromSelected)
-		protectedCalculateExoplanets.POST("/update-result", h.UpdateCalculateExoplanetsResult)
+		protectedCalculateExoplanets.PUT("/update-result", h.UpdateCalculateExoplanetsResult)
 	}
 }
 

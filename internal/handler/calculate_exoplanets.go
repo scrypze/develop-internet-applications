@@ -63,7 +63,7 @@ func (h *Handler) UpdateCalculateExoplanetsComment(ctx *gin.Context) {
 // @Failure 400 {object} map[string]interface{}
 // @Failure 401 {object} map[string]interface{}
 // @Failure 500 {object} map[string]interface{}
-// @Router /calculate-exoplanets/update-result [post]
+// @Router /calculate-exoplanets/update-result [put]
 func (h *Handler) UpdateCalculateExoplanetsResult(ctx *gin.Context) {
 	token := ctx.GetHeader("X-Service-Token")
 	expectedToken := h.config.ComputingServiceToken
